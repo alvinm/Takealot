@@ -1,0 +1,44 @@
+.custom-slider {
+  --bar-height: 8px; /* 2x thicker slider */
+  --knob-size: 36px; /* 2x bigger knobs */
+  --knob-border-radius: 50%;
+  --knob-background: red;
+  --bar-background: #ccc;
+  --bar-background-active: orangered;
+}
+
+.date-slider-container {
+  padding: 10px 0;
+}
+.date-text-container{
+  background-color: #ddd;
+  border-radius:10px;
+}
+
+.distance-slider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.distance-text-container {
+  font-size: 1rem;
+  font-weight: bold;
+  padding-top: 10px;
+}
+
+.custom-slider {
+  --bar-background: #dcdcdc;
+  --bar-background-active: orangered;
+  --knob-background: red;
+  --knob-size: 40px;
+}
+
+.custom-slider .range-knob {
+  transition: transform 0.1s ease-in-out;
+}
+
+.custom-slider .range-knob-pressed {
+  transform: scale(1.2);
+}

@@ -1,0 +1,7 @@
+{
+  "name": "IntelRock",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
