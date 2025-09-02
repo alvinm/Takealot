@@ -117,13 +117,14 @@
     cursor:pointer;
     opacity:0.6;
     color:darkgrey;
+
 }
 .ion-row-hover:hover{
     cursor:pointer;
     opacity:0.6;
     color:darkgrey;
-    border-top:1px solid orangered;
-    border-bottom:1px solid orangered;
+    border-top:1px solid #0070C0;
+    border-bottom:1px solid #0070C0;
 }
 .ellipsis-text {
     white-space: nowrap;
@@ -132,15 +133,27 @@
     width: 200px; /* Set a fixed width */
     display: block;
 }
+.selected-container{
+    background-color: #0070C0;
+    color:#fff;
+    border-radius:50px;
+    border:1px solid #0070C0;
+}
+.kpi-container{
+    background-color: #ccc;
+    color:#0070C0;
+    border-radius:50px;
+    border:1px solid #ccc;
+}
 .text-container{
     background-color: #fff;
-    border-radius:10px;
-    border:1px solid #ddd;
+    border-radius:50px;
+    border:1px solid #0070C0;
 }
 .text-container:hover{
     opacity: 0.5;
     cursor:pointer;
-    color:red;
+    color:#0070C0;
 }
 
 .header-row{
@@ -239,4 +252,8 @@
 .chevron-right ion-select::part(icon) {
     margin-left: auto !important;
     margin-right: 0 !important;
+}
+.placeholder-div:empty::before {
+  content: "Update...";
+  color: gray;
 }

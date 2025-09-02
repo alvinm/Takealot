@@ -27,7 +27,16 @@ export const formatDate = (dated:any)=> {
   const year = date.getFullYear(); // Get the full year
   const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, pad with leading zero
   const day = String(date.getDate()).padStart(2, '0'); // Pad day with leading zero
-  return `${year}-${month}-${day}`; // Combine into yyyy-MM-dd
+  let final_date:any = (`${year}-${month}-${day}`).substring(0,10)
+  return final_date
+  //return `${year}-${month}-${day}`; // Combine into yyyy-MM-dd
+}
+export const formatDateFromMillis = (ms:any) => {
+  const date = new Date(ms);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is 0-based
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 export const formatDateTime = (isoString:any) => {
 const date = new Date(isoString);

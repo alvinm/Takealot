@@ -1,0 +1,17 @@
+.custom-slider {
+  --bar-height: 16px; /* 2x thicker slider */
+  --knob-size: 48px; /* 2x bigger knobs */
+  --knob-border-radius: 50%;
+  --knob-background: #0070C0;
+  --bar-background: #ccc;
+  --bar-background-active: #DEE6F2;
+}
+
+.date-slider-container {
+  padding: 10px 0;
+}
+.date-text-container{
+  background-color: #0070C0;
+  color:#fff;
+  border-radius:10px;
+}
