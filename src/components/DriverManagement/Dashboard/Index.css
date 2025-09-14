@@ -1,0 +1,12 @@
+.vertical-header {
+  writing-mode: vertical-rl; /* Rotate text vertically */
+  transform: rotate(180deg); /* Adjust orientation */
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+/* Optional: make table scrollable if too wide */
+.ion-grid {
+  overflow-x: auto;
+}

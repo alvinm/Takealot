@@ -33,6 +33,62 @@ const RecruitmentAdmin  = (props:any) =>{
     const [advertList, setAdvertList]           = useState<any>()
     
     let Controller = new AbortController();
+
+    const callDocument = async (id:any) =>{
+        let Controller = new AbortController();
+            
+        try {
+            const response = await fetch(
+            `${props.state.secondary_host}getDocument?dbo=select_document&id=${id}`,
+            { signal: Controller.signal }
+            );
+
+            if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Get the file as a blob
+            const blob = await response.blob();
+
+            // Create an object URL for the blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Create a temporary <a> element
+            const a = document.createElement('a');
+            a.href = url;
+
+        // Optional: get filename from response headers, fallback to default
+        const contentDisposition = response.headers.get('content-disposition');
+        console.log(response.headers)
+        let filename = `document_${id}`;
+        if (contentDisposition) {
+            const match = contentDisposition.match(/filename="?(.+)"?/);
+            if (match?.[1]) {
+                filename = match[1];
+            }
+        }
+        filename = filename.replaceAll('"','')
+        console.log(filename)
+    //
+            //// Add file extension if needed (PDF as an example)
+            //if (!filename.includes('.')) {
+            //    filename += '.pdf'; 
+            //}
+    //
+                a.download = filename;
+
+                // Append, trigger click, and clean up
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                // Revoke the object URL
+                window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            console.error('Download failed:', error);
+        }
+    }
     const callStatusList = () =>{
         // Abort any ongoing request
         Controller.abort();
@@ -158,6 +214,7 @@ const RecruitmentAdmin  = (props:any) =>{
             case 4: return 5; break;
             case 5: return 6; break;
             case 6: return 17;break;
+            case 17: return 45;break;
         }
     }
     const setRecruitmentContactStatus = (status_id:any, contact_id:any) =>{
@@ -235,7 +292,7 @@ const RecruitmentAdmin  = (props:any) =>{
                         <IonCol>{x.week_no}</IonCol>
                         <IonCol>{formatDate(x.start_date)}</IonCol>
                         <IonCol>{formatDate(x.end_date)}</IonCol>
-                        <IonCol>{x.file_name}</IonCol>
+                        <IonCol onClick={()=>{callDocument(x.id)}} style={{color:"blue"}} className='ion-text-hover'>{x.file_name}</IonCol>
                     </IonRow>
                 )
             })
@@ -286,29 +343,7 @@ const RecruitmentAdmin  = (props:any) =>{
     },[props])
     return(
         <div>
-            <div style={{position:"fixed",top:"1vh",width:"85%"}}>
-                <IonRow>
-                    <IonCol size='3'>
-                        <IonRow className='ion-padding'>
-                            <IonCol className='ion-padding' onClick={()=>{}}>
-                                <IonImg src="../../public/images/IntelRock.JPG" style={{width:"200px"}}></IonImg>
-                            </IonCol>
-                        </IonRow>
-                    </IonCol>
-                    <IonCol></IonCol>
-                    <IonCol size="2"
-                        className="ion-text-center ion-padding"
-                        onClick={()=>{
-                            props.result(1)
-                        }}
-                    >
-                        <IonRow className="ion-padding ion-text-center text-hover" style={{color:"#fff",backgroundColor:"#aaa",borderRadius:"30px",height:"56px"}}>
-                            <IonCol size="3"className="ion-text-left"><IonIcon icon={analyticsOutline} className="size-24"></IonIcon></IonCol>
-                            <IonCol className="ion-text-left"><div>Dashboard</div></IonCol>
-                        </IonRow>
-                    </IonCol>
-                </IonRow>
-            </div>
+           
             <IonRow>
                 <IonCol 
                     size="3" 

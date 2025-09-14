@@ -4,7 +4,7 @@ import { IonButton, IonCol, IonIcon, IonImg, IonItem, IonLabel, IonRow, IonSelec
 import ColumnChart from '../Charts/ColumnChart'
 import { dateTimeFormat } from 'highcharts'
 import DateSlider from '../Objects/DateSlider/DateSlider'
-import { alarmOutline, alarmSharp, alertCircleSharp, checkmarkCircleSharp } from 'ionicons/icons'
+import { alarmOutline, alarmSharp, alertCircleSharp, checkmarkCircleSharp, refreshCircleSharp } from 'ionicons/icons'
 
 
 const Main = (props:any) =>{
@@ -418,39 +418,51 @@ const Main = (props:any) =>{
         showDetail(false)
     }
     useEffect(()=>{
-        /** */
-        if(detail){
-            setView(2)
-            callFactDeliveriesDetail(lateDelivery,failedDelivery,driverKey)
-        }
+        if(driverFailed != 0){
+            if(detail){
+                setView(2)
+                callFactDeliveriesDetail(lateDelivery,failedDelivery,driverKey)
+            }
+        }    
     },[driverFailed])
     useEffect(()=>{
-        /** */
-       if(detail){
-            setView(2)
-            callFactDeliveriesDetail(lateDelivery,failedDelivery,driverKey)
+        if(driverLate != 0){
+            if(detail){
+                setView(2)
+                callFactDeliveriesDetail(lateDelivery,failedDelivery,driverKey)
+            }
         }
     },[driverLate])
     useEffect(()=>{
-        if(main)
-            setView(1)
-        if(detail)
-            setView(2)
+        if(deliveryStatusKey != undefined){
+            if(main)
+                setView(1)
+            if(detail)
+                setView(2)
+        }
     },[deliveryStatusKey])
     useEffect(()=>{
-        if(main)
-            setView(1)
-        if(detail)
-            setView(2)
+        if(driverKey != undefined){
+            if(main)
+                setView(1)
+            if(detail)
+                setView(2)
+        }
     },[driverKey])
     useEffect(()=>{
         if(maxDate != null)
             showDateSlider(true)
     },[maxDate])
     useEffect(()=>{
-    if (seriesData != null)
-        showChart(true)
+        if (seriesData != null)
+            showChart(true)
     },[seriesData])
+    useEffect(()=>{
+        if(main)
+            setView(1)
+        if(detail)
+            setView(2)
+    },[hubKey])
     useEffect(()=>{
         if(main)
             setView(1)
@@ -479,14 +491,8 @@ const Main = (props:any) =>{
             setView(1)
         if(detail)
             setView(2)
-    },[startDate])
-    useEffect(()=>{
-        console.log(endDate)
-         if(main)
-            setView(1)
-        if(detail)
-            setView(2)
-    },[endDate])
+    },[startDate, endDate])
+    
     const handleDateChange = (range: { startDate: string; endDate: string }) => {
         console.log("Selected Range Parent:", range);
         setMonth(0)
@@ -573,7 +579,7 @@ const Main = (props:any) =>{
                 </IonCol>
                 <IonCol>
                     <IonRow>
-                        <IonCol size="4"></IonCol>
+                        
                         <IonCol className="ion-text-center">
                             <IonRow className="ion-padding">
                                 <IonCol size="3" className="">
@@ -598,7 +604,34 @@ const Main = (props:any) =>{
                                 <IonCol className='ion-text-left'>Breach</IonCol>
                             </IonRow>
                         </IonCol>
-                        <IonCol></IonCol>
+                        <IonCol size="1">
+                            <div 
+                                onClick={()=>{setHubKey(0)}}
+                                className={hubKey == 0?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
+                                    All
+                            </div>
+                        </IonCol>
+                        <IonCol size="2">
+                            <div 
+                                onClick={()=>{setHubKey(119)}}
+                                className={hubKey == 119?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
+                                    Middleburg
+                            </div>
+                        </IonCol>
+                        <IonCol size="2">
+                            <div 
+                                onClick={()=>{setHubKey(222)}}
+                                className={hubKey == 222?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
+                                    Witbank
+                            </div>
+                        </IonCol>
+                        <IonCol size="2">
+                            <div 
+                                onClick={()=>{setHubKey(257)}}
+                                className={hubKey == 257?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
+                                    Secunda
+                            </div>
+                        </IonCol>
                     </IonRow>
                 </IonCol>
             </IonRow>}
@@ -639,7 +672,14 @@ const Main = (props:any) =>{
                     </IonRow>
                     <IonRow className="ion-padding">
                         <IonCol size="6" className="ion-text-center ion-padding" >
-                             <div className="ion-text-bold size-28 ion-text-left">Delivery Status Summary</div>
+                             <IonRow className="ion-text-bold size-28 ion-text-left">
+                                <IonCol size="10">Delivery Status Summary</IonCol>
+                                {(deliveryStatusKey != 0) &&
+                                <IonCol className="ion-text-right size-32"  onClick={()=>{setDeliveryStatusKey(0)}}>
+                                    <IonIcon icon={refreshCircleSharp}></IonIcon>
+                                </IonCol>
+                                }
+                            </IonRow>
                              <div className="size-14 ion-text-left" style={{border:"0px solid #ccc", height:"20vh", width:"100%",borderRadius:"20px",marginLeft:"0%", overflowY:"auto"}}>
                                 <div style={{}}>
                                 <IonRow>

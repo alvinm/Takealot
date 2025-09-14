@@ -18,6 +18,7 @@ const Home: React.FC = () => {
   const [getAdminView, setAdminView]              = useState<any>()
   const [getDriverManagementView, setDriverManagementView] = useState<any>()
   const [getDriverAuditView, setDriverAuditView]          = useState<any>()
+  const [hub_key, setHub_key]                     = useState<any>(0)
 
   const [getLongitude, setLongitude]              = useState<any>()
   const [getLatitude, setLatitude]                = useState<any>()
@@ -33,7 +34,7 @@ const Home: React.FC = () => {
     secondary_host          : 'http://localhost:3000/',
     //secondary_host          : 'https://specifies-broken-cage-permanent.trycloudflare.com/',
     user_id                 : getUserId,
-
+    hub_key                 : hub_key
   
 
   }

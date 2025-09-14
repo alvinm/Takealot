@@ -1,11 +1,30 @@
-import { IonCol, IonInput, IonRow } from "@ionic/react";
-import React, { useRef } from "react";
+import { IonCol, IonInput, IonItem, IonLabel, IonRow, IonSelect, IonSelectOption } from "@ionic/react";
+import React, { useEffect, useRef, useState } from "react";
 
 const CaptureResponses = (props:any) =>{
+    const[gender, setGender]            = useState<any>()
+    const[genderId, setGenderId]        = useState<any>()
     let txtForename                     = useRef<any>()
     let txtSurname                      = useRef<any>()
     let txtEmail                        = useRef<any>()
     let txtMobile                       = useRef<any>()
+    let txtDOB                          = useRef<any>()
+
+    const callGender = () =>{
+        fetch(props.state.secondary_host +"getAdminData?dbo=select_list" +
+            "&parent_id="+46
+            ,
+        )
+        .then(response=>{ return response.json()})
+        .then(data=>{
+            var list = data.map((x:any, i:number)=>{
+                return(
+                    <IonSelectOption key={i} value={x.id}>{x.name}</IonSelectOption>
+                )
+            })
+            setGender(list)
+        })
+    }
     const saveResponse = () =>{
         fetch(props.state.secondary_host +"getAdminData?dbo=insert_recruitment_contact" +
             "&hub_key="+props.hub_key+
@@ -17,6 +36,8 @@ const CaptureResponses = (props:any) =>{
             "&surname=" +txtSurname.current.value+
             "&email=" +txtEmail.current.value+
             "&mobile=" +txtMobile.current.value+
+            "&gender_id=" +genderId+
+            "&dob="+txtDOB.current.value+
             "&created_by="+props.state.user_id
             ,
         )
@@ -25,6 +46,9 @@ const CaptureResponses = (props:any) =>{
             props.result()
         })
     }
+    useEffect(()=>{
+        callGender()
+    },[props])
     return(
         <div>
             <IonRow>
@@ -40,6 +64,12 @@ const CaptureResponses = (props:any) =>{
                 <IonCol>
                     MOBILE
                 </IonCol>
+                <IonCol>
+                    GENDER
+                </IonCol>
+                <IonCol>
+                    DOB
+                </IonCol>
                 <IonCol size="1"></IonCol>
             </IonRow>
             <IonRow>
@@ -54,6 +84,17 @@ const CaptureResponses = (props:any) =>{
                 </IonCol>
                 <IonCol>
                     <IonInput placeholder="Mobile" ref={txtMobile}></IonInput>
+                </IonCol>
+                <IonCol>
+                    <IonItem>
+                        <IonLabel>Select Gender</IonLabel>
+                        <IonSelect onIonChange={(e)=>{setGenderId(e.detail.value)}}>
+                            {gender}
+                        </IonSelect>
+                    </IonItem>
+                </IonCol>
+                <IonCol>
+                    <IonInput placeholder="DOB" type="date"></IonInput>
                 </IonCol>
                 <IonCol size="1" onClick={()=>{saveResponse()}}>
                     <div className="text-container ion-padding ion-text-center">SAVE</div>
