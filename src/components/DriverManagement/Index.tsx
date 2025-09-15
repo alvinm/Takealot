@@ -1,14 +1,16 @@
 import { IonCol, IonIcon, IonImg, IonRow, IonSpinner } from "@ionic/react";
-import { checkmarkCircleOutline, closeOutline, list, warningOutline } from "ionicons/icons";
+import { analyticsOutline, checkmarkCircleOutline, closeOutline, list, listOutline, warningOutline } from "ionicons/icons";
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../GlobalFunctions/Functions";
-import ComplianceDashboard from "./Dashboard/Index";
+import ComplianceDashboard from "./Dashboard/ComplianceManagementDashboard";
+import DriverDashboard from "./Dashboard/DriverDashboard";
+import DriverManagmentList from "./HR/Index";
 
 const DriverManagement = (props:any) =>{
-    const [stage, setStage]                             = useState<any>()
+    const [countryId, setCountryId]                     = useState<any>()
     const [complianceList, setComplianceList]           = useState<any>([])
     const [driverList, setDriverList]                   = useState<any>([])
-    const [driverComplianceList, setDriverComplianceList] = useState<any>([])
+    const [driverComplianceList, setDriverComplianceList]                   = useState<any>([])
     const [driverId, setDriverId]                       = useState<any>(0)
     const [driverName, setDriverName]                   = useState<any>("")
     const [complianceSummary, setComplianceSummary]     = useState<any>([])
@@ -18,7 +20,10 @@ const DriverManagement = (props:any) =>{
     const [filteredDriverList, setFilteredDriverList]   = useState<any>([]);
     const [complianceSpinner, setComplianceSpinner]     = useState<any>()   
     const [driverSpinner, setDriverSpinner]             = useState<any>()
-    const [chartView, showChartView]                    = useState<any>(true)
+    const [complianceChartView, showComplianceChartView]                    = useState<any>(true)
+    const [complianceDetailView, showComplianceDetailView]                  = useState<any>()
+    const [driverDemographicChartView, showDriverDemographicChartView]      = useState<any>(true)
+    const [driverDemographicDetailView, showDriverDemographicDetailView]    = useState<any>()
 
     const filterByWarning = () => {
         const filtered = driverList.filter((x:any) => x.warning > 0);
@@ -66,6 +71,24 @@ const DriverManagement = (props:any) =>{
             setDriverComplianceList(data)
         })
     }
+    const setView = (v:any) =>{
+        resetView()
+        switch(v){
+            case 1 : showComplianceDetailView(true)         
+                    callComplianceList()
+                    callDrivers()
+                    ;break;
+            case 2 : showComplianceChartView(true)          ;break;
+            case 3 : showDriverDemographicChartView(true)   ;break;
+            case 4 : showDriverDemographicDetailView(true)  ;break;
+        }
+    }
+    const resetView = () =>{
+        showComplianceDetailView(false)      
+        showComplianceChartView(false)       
+        showDriverDemographicChartView(false)
+        showDriverDemographicDetailView(false)
+    }
     useEffect(()=> {
         callDriverCompliance()
         callComplianceList()
@@ -83,8 +106,7 @@ const DriverManagement = (props:any) =>{
     },[listId])
     useEffect(()=>{
         setHubKey(props.state.hub_key)
-        callComplianceList()
-        callDrivers()
+        setView(2)
     },[props])
     return(
     <div>
@@ -98,9 +120,43 @@ const DriverManagement = (props:any) =>{
                     </IonRow>
                 </IonCol>
                 <IonCol></IonCol>
+                <IonCol size="6">
+                    <IonRow>
+                        <IonCol></IonCol>
+                        <IonCol size="4">
+                            {(complianceChartView ) &&
+                                
+                                <div className="text-container ion-padding" onClick={()=>{setView(1)}}>
+                                    <IonIcon icon={listOutline} className="size-20"></IonIcon> &nbsp;
+                                    Compliance Detail
+                                </div>
+                            }
+                            {(!complianceChartView ) &&
+                                <div className="text-container ion-padding" onClick={()=>{setView(2)}}>
+                                    <IonIcon icon={analyticsOutline} className="size-20"></IonIcon> &nbsp;
+                                    Compliance Chart
+                                </div>
+                            }
+                        </IonCol>
+                        <IonCol size="4">
+                            {(!driverDemographicChartView) &&
+                                <div className="text-container ion-padding" onClick={()=>{setView(3)}}>
+                                    <IonIcon icon={analyticsOutline} className="size-20"></IonIcon> &nbsp;
+                                    Driver Demographic Chart
+                                </div>
+                            }
+                            {(driverDemographicChartView) &&
+                                <div className="text-container ion-padding" onClick={()=>{setView(4)}}>
+                                    <IonIcon icon={listOutline} className="size-20"></IonIcon> &nbsp;
+                                    Driver Demographic Detail
+                                </div>
+                            }
+                        </IonCol>
+                    </IonRow>
+                </IonCol>
             </IonRow>
             </div>
-            {!chartView &&
+            {complianceDetailView &&
             <IonRow>
                 <IonCol 
                     size="3"
@@ -324,10 +380,37 @@ const DriverManagement = (props:any) =>{
                 </IonCol>
             </IonRow>
             }
-            {chartView &&
+            {complianceChartView &&
             <div>
                 <ComplianceDashboard
                     state={props.state}
+                    result={(e:any)=>{
+                        setHubKey(e.hub_key); 
+                        setListId(e.compliance_id)
+                        setView(1)
+                    }}
+                />
+            </div>
+            }
+            {driverDemographicChartView &&
+            <div>
+                <DriverDashboard
+                    state={props.state}
+                    result={(e:any)=>{
+                        setHubKey(e.hub_key); 
+                        setCountryId(e.countryId)
+                        setView(4)
+                    }}
+                />
+            </div>
+            }
+            {driverDemographicDetailView &&
+            <div>
+                <DriverManagmentList
+                    state={props.state}
+                    result={(e:any)=>{
+                        /** */
+                    }}
                 />
             </div>
             }

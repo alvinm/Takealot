@@ -51,7 +51,7 @@ const CaptureResponses = (props:any) =>{
     },[props])
     return(
         <div>
-            <IonRow>
+            <IonRow style={{backgroundColor:"#0070C0", color:"#fff"}}>
                 <IonCol>
                     FORENAME
                 </IonCol>

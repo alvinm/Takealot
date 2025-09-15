@@ -1,5 +1,5 @@
 import { IonCol, IonIcon, IonImg, IonInput, IonRow } from '@ionic/react'
-import { analyticsOutline, cloudUploadOutline, refreshCircleOutline } from 'ionicons/icons'
+import { addCircleOutline, analyticsOutline, cloudUploadOutline, refreshCircleOutline } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react'
 import { formatDate } from '../../GlobalFunctions/Functions'
 import ImageUpload from '../../ImageUpload/ImageUpload'
@@ -31,6 +31,10 @@ const RecruitmentAdmin  = (props:any) =>{
     const [stage, setStage]                     = useState<any>(0)
 
     const [advertList, setAdvertList]           = useState<any>()
+    const [uploadAdvert, showUploadAdvert]      = useState<any>()
+    const [captureNewDriver, showCaptureNewDriver] = useState<any>()
+    const [comlianceUpdateView, showComplianceUpdateView]   = useState<any>()
+    const [complianceUpdateData, setComplianceUpdateData]   = useState<any>([])
     
     let Controller = new AbortController();
 
@@ -248,6 +252,16 @@ const RecruitmentAdmin  = (props:any) =>{
                         <IonCol size="1">{x.week_no}</IonCol>
                         <IonCol>{x.email}</IonCol>
                         <IonCol>{x.mobile}</IonCol>
+                        <IonCol>
+                            <div 
+                                className="ion-padding ion-text-center text-container" 
+                                style={{color:"#000",borderRadius:"30px",height:"56px"}} 
+                                onClick={()=>{showComplianceUpdateView(!comlianceUpdateView)}}
+                            >
+                                <IonIcon icon={addCircleOutline} className="size-20"></IonIcon>&nbsp;
+                                Add Compliance 
+                            </div>
+                        </IonCol>
                         <IonCol
                             size="1"
                             onClick={()=>{setRecruitmentContactStatus(getNextStatus(x.status_id),x.contact_id)}}
@@ -271,6 +285,8 @@ const RecruitmentAdmin  = (props:any) =>{
                 )
             })
             setResponseList(list)
+            if (stage == 3)
+                showUploadAdvert(false)
         })
     }
     const callRecruitmentStatus =  () =>{
@@ -424,6 +440,12 @@ const RecruitmentAdmin  = (props:any) =>{
                             <IonCol size="1" className="ion-padding">
                                 <IonIcon icon={cloudUploadOutline} className="size-32"></IonIcon>
                             </IonCol>
+                            <IonCol className="ion-text-right">
+                                <IonIcon onClick={()=>{showUploadAdvert(!uploadAdvert)}} icon={addCircleOutline} className="size-32 ion-text-hover"></IonIcon>
+                            </IonCol>
+                        </IonRow>
+                        {uploadAdvert &&
+                        <IonRow>
                             <IonCol size="6" className="size-24 ion-padding">
                                 Upload Advert Receipt For Week <span className="ion-text-bold">({week})</span> starting On <span className="ion-text-bold">({formatDate(startDate)})</span>
                             </IonCol>
@@ -450,6 +472,8 @@ const RecruitmentAdmin  = (props:any) =>{
                                 </IonRow>
                             </IonCol>
                         </IonRow>
+                        }
+                        {!uploadAdvert &&
                         <IonRow style={{borderTop:"1px solid #ccc",}}>
                             <IonCol>
                                 <IonRow className='ion-text-bold ' style={{backgroundColor:"#0070C0",color:"#fff"}}>
@@ -463,53 +487,36 @@ const RecruitmentAdmin  = (props:any) =>{
                                 {advertList}
                             </IonCol>
                         </IonRow>
+                        }
+                        
                     </div>
                     }
                     { stage == 4 &&
                     <div className="ion-padding" style={{border:"1px solid #ccc",borderRadius:"10px",margin:"5px",height:"50vh"}}>
                         <IonRow>
-                            <IonCol size="4" className="ion-text-bold size-30">Responded</IonCol>
-                        </IonRow>
-                        <IonRow>
-                            <IonCol size="1" className="ion-padding">
-                                <IonIcon icon={refreshCircleOutline} className="size-32"></IonIcon>
-                            </IonCol>
-                            <IonCol size="6" className="size-24 ion-padding">
-                                Response Applications
+                            <IonCol size="4" className="ion-text-bold size-30">Capture Responded Applications</IonCol>
+                            <IonCol className="ion-text-right">
+                                <IonIcon onClick={()=>{showCaptureNewDriver(!captureNewDriver)}} icon={addCircleOutline} className="size-32 ion-text-hover"></IonIcon>
                             </IonCol>
                         </IonRow>
-                        <IonRow>
-                             <IonCol>
-                                <CaptureResponses
-                                    state ={props.state}
-                                    hub_key = {hubKey}
-                                    year={year}
-                                    week_no={week}
-                                    status_id={stage}
-                                    result={(e:any)=>{callRecruitmentContactStatus()}}
-                                />
-                             </IonCol>
-                        </IonRow>
-                        <IonRow className='ion-text-bold ' style={{backgroundColor:"#0070C0",color:"#fff"}}>
-                            <IonCol>FORENAME</IonCol>
-                            <IonCol>SURNAME</IonCol>
-                            <IonCol size="1">YEAR</IonCol>
-                            <IonCol size="1">MONTH</IonCol>
-                            <IonCol>EMAIL</IonCol>
-                            <IonCol>MOBILE</IonCol>
-                            <IonCol size="1"></IonCol>
-                            <IonCol size="1"></IonCol>
-                        </IonRow>
-                        {responseList}
-                    </div>
-                    }
-                    { stage == 5 &&
-                    <div>
-                    <IonRow>
-                        <IonCol size="4" className="ion-text-bold size-30">Verification</IonCol>
-                    </IonRow>
-                    <IonRow style={{borderBottom:"1px solid #ccc",margin:"5px"}}>
-                        <IonCol>
+                         {captureNewDriver &&
+                        <div>
+                            <IonRow>
+                                <IonCol>
+                                    <CaptureResponses
+                                        state ={props.state}
+                                        hub_key = {hubKey}
+                                        year={year}
+                                        week_no={week}
+                                        status_id={stage}
+                                        result={(e:any)=>{callRecruitmentContactStatus()}}
+                                    />
+                                </IonCol>
+                            </IonRow>
+                        </div>
+                        }
+                        {!captureNewDriver &&
+                        <div>
                             <IonRow className='ion-text-bold ' style={{backgroundColor:"#0070C0",color:"#fff"}}>
                                 <IonCol>FORENAME</IonCol>
                                 <IonCol>SURNAME</IonCol>
@@ -517,12 +524,40 @@ const RecruitmentAdmin  = (props:any) =>{
                                 <IonCol size="1">MONTH</IonCol>
                                 <IonCol>EMAIL</IonCol>
                                 <IonCol>MOBILE</IonCol>
+                                <IonCol ></IonCol>
                                 <IonCol size="1"></IonCol>
                                 <IonCol size="1"></IonCol>
                             </IonRow>
                             {responseList}
-                        </IonCol>
-                    </IonRow>
+                        </div>
+                        }
+                        {comlianceUpdateView &&
+                        <div>
+                            {}
+                        </div>
+                        }
+                    </div>
+                    }
+                    { stage == 5 &&
+                    <div>
+                        <IonRow>
+                            <IonCol size="4" className="ion-text-bold size-30">Verification</IonCol>
+                        </IonRow>
+                        <IonRow style={{borderBottom:"1px solid #ccc",margin:"5px"}}>
+                            <IonCol>
+                                <IonRow className='ion-text-bold ' style={{backgroundColor:"#0070C0",color:"#fff"}}>
+                                    <IonCol>FORENAME</IonCol>
+                                    <IonCol>SURNAME</IonCol>
+                                    <IonCol size="1">YEAR</IonCol>
+                                    <IonCol size="1">MONTH</IonCol>
+                                    <IonCol>EMAIL</IonCol>
+                                    <IonCol>MOBILE</IonCol>
+                                    <IonCol size="1"></IonCol>
+                                    <IonCol size="1"></IonCol>
+                                </IonRow>
+                                {responseList}
+                            </IonCol>
+                        </IonRow>
                     </div>
                     }
                     { stage == 6 &&
