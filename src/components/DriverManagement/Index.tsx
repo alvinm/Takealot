@@ -5,6 +5,7 @@ import { formatDate } from "../GlobalFunctions/Functions";
 import ComplianceDashboard from "./Dashboard/ComplianceManagementDashboard";
 import DriverDashboard from "./Dashboard/DriverDashboard";
 import DriverManagmentList from "./HR/Index";
+import DriverComplianceDetail from "./DriverComlianceDetail/Index";
 
 const DriverManagement = (props:any) =>{
     const [countryId, setCountryId]                     = useState<any>()
@@ -39,7 +40,16 @@ const DriverManagement = (props:any) =>{
     const resetFilter = () => {
         setFilteredDriverList(driverList);
     };
-
+    //const callDriverComplianceList = (id:any) =>{
+    //    fetch(props.state.secondary_host+'getAdminData?dbo=select_driver_compliance'+
+    //        '&contact_id='+id
+    //    )
+    //    .then((response) => response.json())
+    //    .then(data=>{
+    //        setDriverComplianceList(data)
+    //        setDriverId(id)
+    //    })
+    //}
     const callComplianceList = () =>{
         var z:any = []
         setComplianceList(z)
@@ -62,9 +72,9 @@ const DriverManagement = (props:any) =>{
         .then((response) => response.json())
         .then(data =>{setDriverList(data); setDriverSpinner(false)})
     }
-    const callDriverCompliance =  () =>{
+    const callDriverCompliance =  (id:any) =>{
         fetch(props.state.secondary_host+'getAdminData?dbo=select_driver_compliance'+
-            '&contact_id='+driverId
+            '&contact_id='+id
         )
         .then((response) => response.json())
         .then(data=>{
@@ -90,8 +100,8 @@ const DriverManagement = (props:any) =>{
         showDriverDemographicDetailView(false)
     }
     useEffect(()=> {
-        callDriverCompliance()
-        callComplianceList()
+        //callDriverCompliance()
+        //callComplianceList()
     },[driverId])
     useEffect(() => {
         callComplianceList()
@@ -291,7 +301,7 @@ const DriverManagement = (props:any) =>{
                                                 <IonCol size="1"></IonCol>
                                                 <IonCol 
                                                     className='ion-text-left ion-text-hover'
-                                                    onClick={()=>{setDriverId(x.id), setDriverName(x.name)}}
+                                                    onClick={()=>{setDriverId(x.id); setDriverName(x.name)}}
                                                 >
                                                     {x.name}
                                                 </IonCol>
@@ -343,36 +353,10 @@ const DriverManagement = (props:any) =>{
                         </IonRow>
                         <IonRow>
                             <IonCol>
-                                <IonRow>
-                                    {driverComplianceList.map((x:any,i:number)=>(
-                                        <IonCol 
-                                            size="12" 
-                                            className="ion-padding size-20"
-                                        >
-                                            <IonRow>
-                                                <IonCol size="">{x.compliance}</IonCol>
-                                                <IonCol size="2">{formatDate(x.start_date)}</IonCol>
-                                                <IonCol size="2">{formatDate(x.end_date)}</IonCol>
-                                                <IonCol size="2">
-                                                    {(x.warning/1 == 0 && x.expired/1 == 0) ?
-                                                        <div className="ion-text-center " style={{color:"#fff",backgroundColor:"green",borderRadius:"30px",height:"30px", width:"30px"}}>
-                                                            <IonIcon icon={checkmarkCircleOutline} className="size-30"></IonIcon>
-                                                        </div>
-                                                    :(x.warning/1 > 0 && x.expired/1 == 0) ?
-                                                        <div className="ion-text-center " style={{color:"#fff",backgroundColor:"orange",borderRadius:"30px",height:"30px", width:"30px"}}>
-                                                            <IonIcon icon={warningOutline} className="size-24"></IonIcon>
-                                                        </div>
-                                                    :(x.expired/1 > 0) ?
-                                                        <div className="ion-text-center " style={{color:"#fff",backgroundColor:"red",borderRadius:"30px",height:"30px", width:"30px"}}>
-                                                            <IonIcon icon={closeOutline} className="size-30"></IonIcon>
-                                                        </div>:
-                                                        <div></div>
-                                                    }
-                                                </IonCol>
-                                            </IonRow>
-                                        </IonCol>
-                                    ))}
-                                </IonRow>
+                               <DriverComplianceDetail
+                                    state ={props.state}
+                                    driver_id = {driverId}
+                               />
                             </IonCol>
                         </IonRow>  
                     </div>  

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { formatDate } from '../../GlobalFunctions/Functions'
 import ImageUpload from '../../ImageUpload/ImageUpload'
 import CaptureResponses from '../Capture/Index'
+import DriverComplianceDetail from '../../DriverManagement/DriverComlianceDetail/Index'
 
 const RecruitmentAdmin  = (props:any) =>{
     const [listId, setListId]                   = useState<any>()
@@ -20,21 +21,22 @@ const RecruitmentAdmin  = (props:any) =>{
     const [approved, setApproved]               = useState<any>(0)
     const [forecastRequirment, setForecastRequirement] = useState<any>()
 
-    const [startDate, setStartDate]             = useState<any>('2025-06-01')
-    const [endDate, setEndDate]                 = useState<any>('2025-06-30')
-    const [targetDate, setTargetDate]           = useState<any>('')
-    const [year,setYear]                        = useState<any>('2025')
-    const [month, setMonth]                     = useState<any>(6)
-    const [week, setWeek]                       = useState<any>(0)
-
-    const [hubKey, setHubKey]                   = useState<any>(119)
-    const [stage, setStage]                     = useState<any>(0)
-
-    const [advertList, setAdvertList]           = useState<any>()
-    const [uploadAdvert, showUploadAdvert]      = useState<any>()
-    const [captureNewDriver, showCaptureNewDriver] = useState<any>()
-    const [comlianceUpdateView, showComplianceUpdateView]   = useState<any>()
-    const [complianceUpdateData, setComplianceUpdateData]   = useState<any>([])
+    const [startDate, setStartDate]                          = useState<any>('2025-06-01')
+    const [endDate, setEndDate]                              = useState<any>('2025-06-30')
+    const [targetDate, setTargetDate]                        = useState<any>('')
+    const [year,setYear]                                     = useState<any>('2025')
+    const [month, setMonth]                                  = useState<any>(6)
+    const [week, setWeek]                                    = useState<any>(0)
+             
+    const [hubKey, setHubKey]                                = useState<any>(119)
+    const [stage, setStage]                                  = useState<any>(0)
+             
+    const [advertList, setAdvertList]                        = useState<any>()
+    const [uploadAdvert, showUploadAdvert]                   = useState<any>()
+    const [captureNewDriver, showCaptureNewDriver]           = useState<any>()
+    const [complianceUpdateView, showComplianceUpdateView]   = useState<any>()
+    const [complianceUpdateData, setComplianceUpdateData]    = useState<any>([])
+    const [driverId, setDriverId]                            = useState<any>()
     
     let Controller = new AbortController();
 
@@ -73,12 +75,12 @@ const RecruitmentAdmin  = (props:any) =>{
         }
         filename = filename.replaceAll('"','')
         console.log(filename)
-    //
+            //
             //// Add file extension if needed (PDF as an example)
             //if (!filename.includes('.')) {
             //    filename += '.pdf'; 
             //}
-    //
+            //
                 a.download = filename;
 
                 // Append, trigger click, and clean up
@@ -93,6 +95,15 @@ const RecruitmentAdmin  = (props:any) =>{
             console.error('Download failed:', error);
         }
     }
+    //const callContactComplianceList = (contact_id:any) =>{
+    //    fetch(props.state.secondary_host+'getAdminData?dbo=select_driver_compliance_list'+
+    //        "&contact_id="+contact_id+
+    //        "&hub_key="+hubKey+
+    //        "&created_by="+props.state.user_id
+    //    )
+    //    .then((response) => response.json())
+    //    .then(setComplianceUpdateData)
+    //}
     const callStatusList = () =>{
         // Abort any ongoing request
         Controller.abort();
@@ -147,8 +158,8 @@ const RecruitmentAdmin  = (props:any) =>{
                 <IonCol key={i} size="2">
                 <div
                     className={
-                    week === x.week_of_year
-                        ? "selected-container ion-text-center"
+                    week === x.week_of_year? 
+                          "selected-container ion-text-center"
                         : "text-container ion-text-center"
                     }
                     onClick={() => {
@@ -256,7 +267,10 @@ const RecruitmentAdmin  = (props:any) =>{
                             <div 
                                 className="ion-padding ion-text-center text-container" 
                                 style={{color:"#000",borderRadius:"30px",height:"56px"}} 
-                                onClick={()=>{showComplianceUpdateView(!comlianceUpdateView)}}
+                                onClick={()=>{
+                                    showComplianceUpdateView(!complianceUpdateView)
+                                    setDriverId(x.id)
+                                }}
                             >
                                 <IonIcon icon={addCircleOutline} className="size-20"></IonIcon>&nbsp;
                                 Add Compliance 
@@ -354,6 +368,7 @@ const RecruitmentAdmin  = (props:any) =>{
         if(stage == 17)
             callRecruitmentContactStatus()
     },[stage])
+
     useEffect(()=>{
         callStatusList()
     },[props])
@@ -515,7 +530,7 @@ const RecruitmentAdmin  = (props:any) =>{
                             </IonRow>
                         </div>
                         }
-                        {!captureNewDriver &&
+                        {(!captureNewDriver && !complianceUpdateView) &&
                         <div>
                             <IonRow className='ion-text-bold ' style={{backgroundColor:"#0070C0",color:"#fff"}}>
                                 <IonCol>FORENAME</IonCol>
@@ -531,9 +546,27 @@ const RecruitmentAdmin  = (props:any) =>{
                             {responseList}
                         </div>
                         }
-                        {comlianceUpdateView &&
-                        <div>
-                            {}
+                        {complianceUpdateView &&
+                        <div style={{height:"40vh", overflowY:"auto"}}>
+                            <IonRow className='ion-text-bold ' style={{backgroundColor:"#0070C0",color:"#fff"}}>
+                                <IonCol size="4">COMPLIANCE ITEM</IonCol>
+                                <IonCol size="1">START DATE</IonCol>
+                                <IonCol size="1">END DATE</IonCol>
+                                <IonCol size="2">
+                                     <IonIcon 
+                                        onClick={()=>{
+                                            showCaptureNewDriver(!captureNewDriver)
+                                            showComplianceUpdateView(!complianceUpdateView)
+                                        }} 
+                                        icon={addCircleOutline} 
+                                        className="size-32 ion-text-hover"
+                                    ></IonIcon>
+                                </IonCol>
+                            </IonRow>
+                            <DriverComplianceDetail
+                                state={props.state}
+                                driver_id = {driverId}
+                            />
                         </div>
                         }
                     </div>

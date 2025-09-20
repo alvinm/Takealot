@@ -11,21 +11,17 @@ const Footer = (props:any) =>{
         <IonRow>
             <IonCol>
                 <IonRow>
-                    <IonCol className="ion-text-bold ion-padding size-16">Performance</IonCol>
-                    <IonCol className="ion-text-bold ion-padding size-16">Management KPI</IonCol>
-                </IonRow>
-                <IonRow>
                     <IonCol className="ion-padding">
                         <div onClick={()=>{setTextSelected(-1)}} className={textSelected==0?"selected-container ion-padding ion-text-center size-16":"text-container ion-padding ion-text-center size-16"} >Device <br/>Usage</div>
                     </IonCol>
-                    <IonCol className="ion-padding">
+                    {/**<IonCol className="ion-padding">
                         <div onClick={()=>{setTextSelected(-1)}} className={textSelected==0?"selected-container ion-padding ion-text-center size-16":"text-container ion-padding ion-text-center size-16"} >Early <br/> Deliveries</div>
-                    </IonCol>
+                    </IonCol>*/}
                     <IonCol className="ion-padding">
                         <div onClick={()=>{setTextSelected(2)}} className={textSelected==2?"selected-container ion-padding ion-text-center size-16":"text-container ion-padding ion-text-center size-16"} >Late <br/> Deliveries</div>
                     </IonCol>
                     <IonCol className="ion-padding">
-                        <div onClick={()=>{setTextSelected(-1)}} className={textSelected==0?"selected-container ion-padding ion-text-center size-16":"text-container ion-padding ion-text-center size-16"} >Driver <br/> Failures</div>
+                        <div onClick={()=>{setTextSelected(7)}} className={textSelected==0?"selected-container ion-padding ion-text-center size-16":"text-container ion-padding ion-text-center size-16"} >Driver <br/> Failures</div>
                     </IonCol>
                     <IonCol className="ion-padding">
                         <div onClick={()=>{setTextSelected(-1)}} className={textSelected==0?"selected-container ion-padding ion-text-center size-16":"text-container ion-padding ion-text-center size-16"} >Hub <br/> Failures</div>
@@ -44,7 +40,7 @@ const Footer = (props:any) =>{
                         <div onClick={()=>{setTextSelected(5)}} className={textSelected==5?"selected-kpi-container ion-padding ion-text-center size-16":"kpi-container ion-padding ion-text-center size-16"} >Driver <br/> Audit</div>
                     </IonCol>
                     <IonCol className="ion-padding">
-                        <div onClick={()=>{setTextSelected(-1)}}  ><br/></div>
+                        <div onClick={()=>{setTextSelected(6)}} className={textSelected==5?"selected-kpi-container ion-padding ion-text-center size-16":"kpi-container ion-padding ion-text-center size-16"} >Milkrun<br/>Daily Audit</div>
                     </IonCol>
                     <IonCol className="ion-padding">
                         <div onClick={()=>{setTextSelected(-1)}}  ><br/></div>

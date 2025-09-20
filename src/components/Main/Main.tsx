@@ -5,57 +5,69 @@ import ColumnChart from '../Charts/ColumnChart'
 import { dateTimeFormat } from 'highcharts'
 import DateSlider from '../Objects/DateSlider/DateSlider'
 import { alarmOutline, alarmSharp, alertCircleSharp, checkmarkCircleSharp, refreshCircleSharp } from 'ionicons/icons'
+import DriverStatusList from '../DriverManagement/DriverStatusList/DriverDeliveryStatusListLate'
+import DriverDeliveryStatusListLate from '../DriverManagement/DriverStatusList/DriverDeliveryStatusListLate'
 
 
 const Main = (props:any) =>{
-    const [startDate, setStartDate]             = useState<any>('2025-06-01')
-    const [endDate, setEndDate]                 = useState<any>('2025-06-30')
-    const [minDate, setMinDate]                 = useState<any>('2025-06-01')
-    const [maxDate, setDate]                    = useState<any>('2025-06-30')
-    const [month, setMonth]                     = useState<any>(0)
-    const [year,setYear]                        = useState<any>('2025')
+    const [startDate, setStartDate]                          = useState<any>('2025-06-01')
+    const [endDate, setEndDate]                              = useState<any>('2025-06-30')
+    const [minDate, setMinDate]                              = useState<any>('2025-06-01')
+    const [maxDate, setDate]                                 = useState<any>('2025-06-30')
+    const [month, setMonth]                                  = useState<any>(0)
+    const [year,setYear]                                     = useState<any>('2025')
     
-    const [hubKey, setHubKey]                   = useState<any>(119)
-    const [hubName, setHubName]                 = useState<any>('')
-    const [driverKey, setDriverKey]             = useState<any>(0)
-    const [driverName, setDriverName]           = useState<any>('')
-    const [driverLate, setDriverLate]           = useState<any>(0)
-    const [driverFailed, setDriverFailed]       = useState<any>(0)
+    const [hubKey, setHubKey]                                = useState<any>(119)
+    const [hubName, setHubName]                              = useState<any>('')
+    const [driverKey, setDriverKey]                          = useState<any>(0)
+    const [driverName, setDriverName]                        = useState<any>('')
+    const [driverLate, setDriverLate]                        = useState<any>(0)
+    const [driverFailed, setDriverFailed]                    = useState<any>(0)
     const [schedulePerfomanceKey, setSchedulePerformanceKey]    = useState<any>(0)
     const [deliveryStatusKey, setDeliveryStatusKey]             = useState<any>(0)
-    const [orderTypeKey, setOrderTypeKey]       = useState<any>(0)
-    const [orderStatusKey, setOrderStatus]      = useState<any>(0)
-    const [failedDelivery, setFailedDelivery]   = useState<any>(0)
-    const [lateDelivery, setLateDelivery]       = useState<any>(0)     
+    const [orderTypeKey, setOrderTypeKey]                    = useState<any>(0)
+    const [orderStatusKey, setOrderStatus]                   = useState<any>(0)
+    const [failedDelivery, setFailedDelivery]                = useState<any>(0)
+    const [lateDelivery, setLateDelivery]                    = useState<any>(0)     
 
-    const [onTime, setOnTime]                   = useState<any>(0)
-    const [onTimePCT, setOnTimePCT]             = useState<any>(0)
-    const [late, setLate]                       = useState<any>(0)
-    const [performance, setPerformance]         = useState<any>(0)
-    const [driverCount, setDriverCount]         = useState<any>(0)
-    const [driverAvailableCount, setDriverAvailableCount]       = useState<any>(0)
-    const [driverForecastedCount, setDriverForecastedCount]     = useState<any>(0)
+    const [onTime, setOnTime]                                = useState<any>(0)
+    const [onTimePCT, setOnTimePCT]                          = useState<any>(0)
+    const [late, setLate]                                    = useState<any>(0)
+    const [performance, setPerformance]                      = useState<any>(0)
+    const [driverCount, setDriverCount]                      = useState<any>(0)
+    const [driverAvailableCount, setDriverAvailableCount]    = useState<any>(0)
+    const [driverForecastedCount, setDriverForecastedCount]  = useState<any>(0)
 
-    const [seriesData, setSeriesData]           = useState<any>()
+    const [seriesData, setSeriesData]                       = useState<any>()
     const [seriesDataDetail, setSeriesDataDetail]           = useState<any>()
-    const [xAxisCategories, setXAxisCategories] = useState<any>()
-    const [driverList, setDriverList]           = useState<any>()
+    const [xAxisCategories, setXAxisCategories]             = useState<any>()
+    const [driverList, setDriverList]                       = useState<any>()
     const [deliveryStatusList, setDeliveryStatusList]       = useState<any>()
     const [orderStatusList, setOrderStatusList]             = useState<any>()
     const [hubList, setHubList]                             = useState<any>()
     const [deliveryDetailList, setDeliveryDetailList]       = useState<any>()
 
-    const [chart, showChart]                    = useState<any>()
-    const [dateSlider, showDateSlider]          = useState<any>()
-    const [driverSpinner, showDriverSpinner]    = useState<any>()
-    const [dailySpinner, showDailySpinner]      = useState<any>()
-    const [main, showMain]                      = useState<any>(true)
-    const [detail, showDetail]                  = useState<any>(false)
+    const [chart, showChart]                                = useState<any>()
+    const [dateSlider, showDateSlider]                      = useState<any>()
+    const [driverSpinner, showDriverSpinner]                = useState<any>()
+    const [dailySpinner, showDailySpinner]                  = useState<any>()
+    const [main, showMain]                                  = useState<any>(true)
+    const [detail, showDetail]                              = useState<any>(false)
 
-    const [selected, setSelected]               = useState<any>(6)
+    const [selected, setSelected]                           = useState<any>(6)
 
-    const [minValue, setMinValue]               = useState<any>(0)
-    const [maxValue, setMaxValue]               = useState<any>(100)
+    const [minValue, setMinValue]                           = useState<any>(0)
+    const [maxValue, setMaxValue]                           = useState<any>(100)
+
+    const [params, setParams]                   = useState<any>({
+                                                                    start_date                  :startDate,
+                                                                    end_date                    :endDate,
+                                                                    hub_key                     :hubKey,
+                                                                    schedule_performance_key    :schedulePerfomanceKey,
+                                                                    delivery_status_key         :deliveryStatusKey,
+                                                                    order_type_key              :orderTypeKey,
+                                                                    order_status_key            :orderStatusKey
+                                                                })
 
     let Controller = new AbortController();
 
@@ -310,89 +322,89 @@ const Main = (props:any) =>{
             showDailySpinner(false)
         }) 
     }
-    const callFactDeliveriesDriver = () =>{
-        showDriverSpinner(true)
-        // Abort any ongoing request
-        Controller.abort();
+    //const callFactDeliveriesDriver = () =>{
+    //    showDriverSpinner(true)
+    //    // Abort any ongoing request
+    //    Controller.abort();
 
-        // Create a new AbortController for this request
-        Controller = new AbortController();
-        fetch(props.state.secondary_host+'getData?dbo=select_fact_deliveries_driver'+
-            '&start_date				='+startDate+
-            '&end_date					='+endDate+
-            '&hub_key					='+hubKey+
-            '&driver_key				='+driverKey+
-            '&schedule_performance_key	='+schedulePerfomanceKey+
-            '&delivery_status_key		='+deliveryStatusKey+
-            '&order_type_key			='+orderTypeKey+
-            '&order_status_key			='+orderStatusKey
-        )
-        .then((response) => response.json())
-        .then(data=>{
-           
-            var list:any = data.map((x:any, i:number)=>{
-                return(
-                    <IonRow 
-                        key={i}
-                        className=" size-16 "
-                        style={{marginBottom:"5px",}}
-                        
-                    >
-                        <IonCol size="3" className='ion-text-hover' 
-                            onClick={()=>{
-                                setDriverName(x.driver_name)
-                                setDriverKey(x.driver_key)
-                            }}>
-                            <div 
-                                style={{
-                                width:"24px",
-                                height:"24px", 
-                                borderRadius:"24px", 
-                                fontWeight:"bold",
-                                background:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"", 
-                                float:"left"
-                            }}></div>&nbsp;&nbsp;
-                            {x.driver_name}
-                        </IonCol>
-                        <IonCol className='ion-text-right'>{addCommas(x.on_time/1)}</IonCol>
-                        <IonCol 
-                            className='ion-text-right ion-text-hover'
-                            onClick={()=>{
-                                setDriverName(x.driver_name)
-                                callFactDeliveriesDetail(1,0,x.driver_key)
-                            }}
-                            style={{
-                                color:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"",
-                            }}    
-                        >{addCommas(x.early/1)}</IonCol>
-                        <IonCol 
-                            className='ion-text-right ion-text-hover'
-                            onClick={()=>{
-                                setDriverName(x.driver_name)
-                                callFactDeliveriesDetail(1,0,x.driver_key)
-                            }}
-                            style={{
-                                color:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"",
-                            }}    
-                        >{addCommas(x.late/1)}</IonCol>
-                        <IonCol 
-                            className='ion-text-right ion-text-hover'
-                            onClick={()=>{
-                                setDriverName(x.driver_name)
-                                callFactDeliveriesDetail(0,1, x.driver_key)
-                            }}
-                            style={{
-                                color:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"",
-                            }}    
-                        >{addCommas(x.failed/1)}</IonCol>
-                        <IonCol className='ion-text-right'>{((x.late/1)/(x.on_time/1)*100).toFixed(2)}</IonCol>
-                    </IonRow>
-                )
-            })
-            setDriverList(list)
-            showDriverSpinner(false)
-        }) 
-    }
+    //    // Create a new AbortController for this request
+    //    Controller = new AbortController();
+    //    fetch(props.state.secondary_host+'getData?dbo=select_fact_deliveries_driver'+
+    //        '&start_date				='+startDate+
+    //        '&end_date					='+endDate+
+    //        '&hub_key					='+hubKey+
+    //        '&driver_key				='+driverKey+
+    //        '&schedule_performance_key	='+schedulePerfomanceKey+
+    //        '&delivery_status_key		='+deliveryStatusKey+
+    //        '&order_type_key			='+orderTypeKey+
+    //        '&order_status_key			='+orderStatusKey
+    //    )
+    //    .then((response) => response.json())
+    //    .then(data=>{
+    //       
+    //        var list:any = data.map((x:any, i:number)=>{
+    //            return(
+    //                <IonRow 
+    //                    key={i}
+    //                    className=" size-16 "
+    //                    style={{marginBottom:"5px",}}
+    //                    
+    //                >
+    //                    <IonCol size="3" className='ion-text-hover' 
+    //                        onClick={()=>{
+    //                            setDriverName(x.driver_name)
+    //                            setDriverKey(x.driver_key)
+    //                        }}>
+    //                        <div 
+    //                            style={{
+    //                            width:"24px",
+    //                            height:"24px", 
+    //                            borderRadius:"24px", 
+    //                            fontWeight:"bold",
+    //                            background:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"", 
+    //                            float:"left"
+    //                        }}></div>&nbsp;&nbsp;
+    //                        {x.driver_name}
+    //                    </IonCol>
+    //                    <IonCol className='ion-text-right'>{addCommas(x.on_time/1)}</IonCol>
+    //                    <IonCol 
+    //                        className='ion-text-right ion-text-hover'
+    //                        onClick={()=>{
+    //                            setDriverName(x.driver_name)
+    //                            callFactDeliveriesDetail(1,0,x.driver_key)
+    //                        }}
+    //                        style={{
+    //                            color:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"",
+    //                        }}    
+    //                    >{addCommas(x.early/1)}</IonCol>
+    //                    <IonCol 
+    //                        className='ion-text-right ion-text-hover'
+    //                        onClick={()=>{
+    //                            setDriverName(x.driver_name)
+    //                            callFactDeliveriesDetail(1,0,x.driver_key)
+    //                        }}
+    //                        style={{
+    //                            color:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"",
+    //                        }}    
+    //                    >{addCommas(x.late/1)}</IonCol>
+    //                    <IonCol 
+    //                        className='ion-text-right ion-text-hover'
+    //                        onClick={()=>{
+    //                            setDriverName(x.driver_name)
+    //                            callFactDeliveriesDetail(0,1, x.driver_key)
+    //                        }}
+    //                        style={{
+    //                            color:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"",
+    //                        }}    
+    //                    >{addCommas(x.failed/1)}</IonCol>
+    //                    <IonCol className='ion-text-right'>{((x.late/1)/(x.on_time/1)*100).toFixed(2)}</IonCol>
+    //                </IonRow>
+    //            )
+    //        })
+    //        setDriverList(list)
+    //        showDriverSpinner(false)
+    //    }) 
+    //}
     const setView = (v:any) =>{
         resetView()
         switch(v){
@@ -401,7 +413,7 @@ const Main = (props:any) =>{
                 callDimHub();
                 callFactDeliveries();
                 callFactDeliveriesDaily();
-                callFactDeliveriesDriver();
+                //callFactDeliveriesDriver();
                 callFactDeliveryStatusSummary()
                 break;
             case 2 :
@@ -521,17 +533,6 @@ const Main = (props:any) =>{
                             }
                         </IonCol>
                         <IonCol size="2"></IonCol>
-                        <IonCol size='1' className="ion-text-center ion-padding">
-                            <IonItem>
-                                <IonLabel>Selected</IonLabel>
-                                <IonSelect 
-                                    onChange={(e)=>{setHubKey(e.currentTarget.value)}}
-                                    defaultValue={119}
-                                >
-                                    {hubList}
-                                </IonSelect>
-                            </IonItem>
-                        </IonCol>
                     </IonRow>
                 </div>
             {main &&
@@ -731,34 +732,13 @@ const Main = (props:any) =>{
                 <IonCol>
                     <IonRow>
                         <IonCol>
-                            <IonRow style={{backgroundColor:"#0070C0"}}>
-                                <IonCol size="3"className='size-16 ion-text-center ion-text-bold text-white' style={{color:"#fff"}}>
-                                     Driver &nbsp;&nbsp;
-                                    {driverSpinner &&<IonSpinner className='size-28'></IonSpinner>}
-                                </IonCol>
-                                <IonCol style={{fontSize:"16px", padding:"15px",color:"#fff",fontWeight:"bold"}} className="ion-text-right">On Time</IonCol>
-                                <IonCol style={{fontSize:"16px", padding:"15px",color:"#fff",fontWeight:"bold"}} className="ion-text-right">Early</IonCol>
-                                <IonCol style={{fontSize:"16px", padding:"15px",color:"#fff",fontWeight:"bold"}} className="ion-text-right">Late</IonCol>
-                                <IonCol style={{fontSize:"16px", padding:"15px",color:"#fff",fontWeight:"bold"}} className="ion-text-right">Failed</IonCol>
-                                <IonCol style={{fontSize:"16px", padding:"15px",color:"#fff",fontWeight:"bold"}} className="ion-text-right">% Late</IonCol>
-                            </IonRow>
-                            {(driverKey != 0)  &&
-                            <IonRow>
-                                <IonCol>
-                                    <div 
-                                        onClick={()=>{setDriverKey(0)}}
-                                        className='size-24 ion-text-center ion-text-bold ion-text-hover'
-                                        style={{backgroundColor:"#000",borderRadius:"30px", height:"60px", width:"auto", padding:"15px", color:"#fff", opacity:"0.6"}}
-                                    >All Drivers</div>
-                                </IonCol>
-                                <IonCol style={{fontSize:"28px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right"></IonCol>
-                                <IonCol style={{fontSize:"28px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right"></IonCol>
-                                <IonCol style={{fontSize:"28px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right"></IonCol>
-                            </IonRow>
-                            }
-                            <div style={{overflowY:"auto",height:"80vh"}}>
-                                {driverList}
-                            </div>
+                            <DriverDeliveryStatusListLate
+                                state={props.state}
+                                params={params}
+                                driver_key={(e:any)=>{setDriverKey(e)}}
+                                driver_name = {(e:any)=>{setDriverName(e)}}
+                                call_fact_deliveries_detail={(e:any)=>{/** */}}
+                            />
                         </IonCol>
                     </IonRow>
                 </IonCol>

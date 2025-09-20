@@ -12,6 +12,11 @@ import Recruitment from '../components/Recruitment/Index';
 import Admin from '../components/Admin/ListManager';
 import DriverManagement from '../components/DriverManagement/Index';
 import DriverAudit from '../components/DriverManagement/DriverAudit/Index';
+import AdminHome from '../components/Admin/Index';
+import MilkRunAudit from '../components/HubManagement/MilkRun';
+import DriverDeliveryStatusListLate from '../components/DriverManagement/DriverStatusList/DriverDeliveryStatusListLate';
+import DriverDeliveryStatusListFailed from '../components/DriverManagement/DriverStatusList/DriverDeliveryStatusListFailed';
+import DriverFailures from '../components/DriverFailures/Index';
 
 const Home: React.FC = () => {
   const [getUserId, setUserId]                    = useState<any>(1)
@@ -25,6 +30,8 @@ const Home: React.FC = () => {
   const [getLogin, setLogin]                      = useState<any>()
   const [getHome, setHome]                        = useState<any>()
   const [recruitmentView, setRecruitmentView]     = useState<any>()
+  const [milkRunView, setMilkRunView]             = useState<any>()
+  const [driverFailuresView, setDriverFailuresView] = useState<any>()
   
   const [minDate, setMinDate]                     = useState<any>('2025-07-28')
   const [maxDate, setDate]                        = useState<any>('2025-03-02')
@@ -54,6 +61,8 @@ const Home: React.FC = () => {
       case 3:setRecruitmentView(true);break;
       case 4:setDriverManagementView(true);break;
       case 5:setDriverAuditView(true);break;
+      case 6:setMilkRunView(true);break;
+      case 7:setDriverFailuresView(true);break;
     }
   }
 
@@ -64,6 +73,8 @@ const Home: React.FC = () => {
     setRecruitmentView(false)
     setDriverManagementView(false)
     setDriverAuditView(false);
+    setMilkRunView(false);
+    setDriverFailuresView(false)
   }
 
   const setView = (v:any) =>{
@@ -121,7 +132,7 @@ const Home: React.FC = () => {
       {getAdminView &&
       <div>
         <div style={{position:"absolute",top:"10vh",width:"100%", height:"78vh", overflowY:"auto"}}>
-          <Admin
+          <AdminHome
             state={state}
           />
         </div>
@@ -159,6 +170,35 @@ const Home: React.FC = () => {
             />
           </div>
       </div>
+      }
+      {milkRunView &&
+      <div>
+        <div style={{position:"absolute",top:"10vh",width:"100%", height:"78vh", overflowY:"auto"}}>
+        <MilkRunAudit
+          state = {state}
+        />
+        </div>
+        <div style={{position:"absolute",top:"87vh",width:"100%", height:"10vh"}}>
+            <Footer 
+              result={(e:any)=>{homeView(e)}}
+            />
+          </div>
+      </div>
+      }
+      {driverFailuresView &&
+      <div>
+        <div style={{position:"absolute",top:"10vh",width:"100%", height:"78vh", overflowY:"auto"}}>
+          <DriverFailures
+            state={state}
+            home={getHome}
+          />
+        </div>
+        <div style={{position:"absolute",top:"87vh",width:"100%", height:"10vh"}}>
+            <Footer 
+              result={(e:any)=>{homeView(e)}}
+            />
+          </div>
+        </div>
       }
     </div>  
   )

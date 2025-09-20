@@ -1,9 +1,9 @@
 import { IonCol, IonIcon, IonImg, IonInput, IonRow } from '@ionic/react';
 import React, { useEffect, useRef, useState } from 'react'
 import { formatDate, formatDateTime } from '../../GlobalFunctions/Functions';
-import { addCircleOutline, pencilSharp, saveOutline } from 'ionicons/icons';
+import { addCircleOutline, arrowBack, pencilSharp, saveOutline } from 'ionicons/icons';
 
-const Admin = (props:any) =>{
+const AdminList = (props:any) =>{
     const [dailySpinner, showDailySpinner]      = useState<any>()
 
     const [parentList, setParentList]           = useState<any>()
@@ -75,7 +75,8 @@ const Admin = (props:any) =>{
         // Create a new AbortController for this request
         Controller = new AbortController();
         fetch(props.state.secondary_host+'getAdminData?dbo=select_list'+
-            '&parent_id				='+-1
+            '&parent_id				='+-1+
+            '&admin=1'
         )
         .then((response) => response.json())
         .then(data=>{
@@ -110,7 +111,8 @@ const Admin = (props:any) =>{
         // Create a new AbortController for this request
         Controller = new AbortController();
         fetch(props.state.secondary_host+'getAdminData?dbo=select_list'+
-            '&parent_id				='+parentId
+            '&parent_id				='+parentId+
+            '&admin=1'
         )
         .then((response) => response.json())
         .then(data=>{
@@ -171,17 +173,17 @@ const Admin = (props:any) =>{
     },[props])
     return(
         <div>
-            <div style={{position:"fixed",top:"1vh",width:"85%"}}>
-                <IonRow>
-                    <IonCol size='3'>
-                        <IonRow className='ion-padding'>
-                            <IonCol className='ion-padding' onClick={()=>{}}>
-                                <IonImg src="../../public/images/IntelRock.JPG" style={{width:"200px"}}></IonImg>
-                            </IonCol>
-                        </IonRow>
-                    </IonCol>
-                </IonRow>
-            </div>
+            <IonRow>
+                <IonCol></IonCol>
+                <IonCol size="1">
+                    <div className="text-container ion-padding ion-text-center size-24" onClick={()=>{
+                        props.result(0)
+                    }}>
+                        <IonIcon icon={arrowBack} className="size-28"></IonIcon>&nbsp;
+                        Back
+                    </div>
+                </IonCol>
+            </IonRow>
             <IonRow>
                 <IonCol 
                     size="3" 
@@ -306,4 +308,4 @@ const Admin = (props:any) =>{
         </div>
     )
 }
-export default Admin
+export default AdminList
