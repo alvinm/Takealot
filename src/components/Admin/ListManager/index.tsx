@@ -79,28 +79,7 @@ const AdminList = (props:any) =>{
             '&admin=1'
         )
         .then((response) => response.json())
-        .then(data=>{
-            const lists = data.map((x:any, i:number)=>{
-                return(
-                    <IonRow key={i}>
-                        <IonCol >
-                            <div className={parentId==x.id?
-                                    "selected-container ion-padding ion-text-center text-hover":
-                                    "text-container ion-padding ion-text-center text-hover"
-                                } 
-                                onClick={()=>{setParentId(x.id)}}
-                            >
-                                <IonRow>
-                                    <IonCol size="1">{x.id}</IonCol>
-                                    <IonCol className='ion-text-left'>{x.name}</IonCol>
-                                    <IonCol size="2" className='ion-text-right'>({x.children})</IonCol>
-                                </IonRow>
-                            </div>
-                        </IonCol>
-                    </IonRow>
-                )
-            })
-            setParentList(lists)
+        .then(data=>{setParentList(data)
         })
             
     }
@@ -120,13 +99,10 @@ const AdminList = (props:any) =>{
             const lists = data.map((x:any, i:number)=>{
                 return(
                     <IonRow key={i} className="size-20">
-                        <IonCol>{x.id}</IonCol>
-                        <IonCol onClick={()=>{setListId(x.id)}}>{x.name}</IonCol>
-                        <IonCol>{(x.created_date)}</IonCol>
-                        <IonCol>{(x.created_by)}</IonCol>
-                        <IonCol>{(x.updated_date)}</IonCol>
-                        <IonCol>{x.updated_by}</IonCol>
+                        <IonCol size="1">{x.id}</IonCol>
+                        <IonCol onClick={()=>{setListId(x.id)}}>{x.name.toUpperCase()}</IonCol>
                         <IonCol 
+                            size="1"
                             onClick={()=>{
                                 showAddListItemView(true)
                                 setListId(x.id)
@@ -135,6 +111,7 @@ const AdminList = (props:any) =>{
                             <IonIcon className='size-32' icon={pencilSharp}> </IonIcon>
                         </IonCol>
                         <IonCol
+                            size="2"
                             onClick={()=>{setStatus(x.id)}}
                         >{x.status == 1?
                             <div className="ion-padding ion-text-center" style={{color:"#fff",backgroundColor:"darkgreen",borderRadius:"30px",height:"56px"}}>
@@ -174,25 +151,22 @@ const AdminList = (props:any) =>{
     return(
         <div>
             <IonRow>
-                <IonCol></IonCol>
-                <IonCol size="1">
-                    <div className="text-container ion-padding ion-text-center size-24" onClick={()=>{
-                        props.result(0)
-                    }}>
-                        <IonIcon icon={arrowBack} className="size-28"></IonIcon>&nbsp;
-                        Back
-                    </div>
-                </IonCol>
-            </IonRow>
-            <IonRow>
                 <IonCol 
-                    size="3" 
-                    className="size-20 ion-text-bold ion-padding"
-                    style={{borderRight:"3px solid #0070C0",height:"80vh"}}
+                    size="4" 
+                    className="size-16 ion-text-bold ion-padding"
                 >
+                <div 
+                    className="size-16 ion-padding"
+                    style={{borderRight:"0px solid #0070C0",height:"auto", border:"1px solid #ddd", borderRadius:"20px"}}
+                >
+                    <IonRow>
+                        <IonCol style={{color:"#0070C0",fontWeight:"bold",size:"20px"}} className="size-24">
+                            <b>PARENT LIST</b>
+                        </IonCol>
+                    </IonRow>
                     <IonRow 
-                        style={{borderBottom:"1px solid #ddd"}}
-                        className="size-20 ion-text-bold">
+                        style={{borderBottom:"3px solid #0070C0",}}
+                        className="size-16 ion-text-bold">
                         <IonCol size="9">
                             {addParentListItemView &&
                                 <IonRow>
@@ -222,21 +196,67 @@ const AdminList = (props:any) =>{
                                     </IonRow>
                                 </IonCol>
                             </IonRow>
+                            <IonRow>
+                                <IonCol>&nbsp;</IonCol>
+                            </IonRow>
                         </IonCol>
                     </IonRow>
-                    <IonRow
-                        className="ion-padding"
-                    >
-                        <IonCol>Parent List</IonCol>
-                    </IonRow>
-                    {parentList}
+                    {parentList &&
+                        <IonRow>
+                            {parentList.map((x:any, i:number)=>{
+                                return(
+                                        <IonCol key={i} size="6">
+                                            <div 
+                                                style={{border:"0.5px solid #ddd"}}
+                                                className={parentId==x.id?
+                                                    "ion-padding ion-text-hover":
+                                                    "ion-padding ion-text-hover"
+                                                } 
+                                                
+                                                title={x.id}
+                                            >
+                                                <IonRow>
+                                                    <IonCol className='ion-text-left ellipsis-text'>
+                                                        <div
+                                                            onClick={()=>{setParentId(x.id);setSelected(x.id)}}
+                                                            style={{
+                                                                float:"left",
+                                                                height:"20px",
+                                                                width:"20px",
+                                                                border:"0.5px solid #ddd",
+                                                                backgroundColor:x.id == selected? "#0070C0":""
+                                                            }}
+                                                        ></div>&nbsp;
+                                                        {x.name.toUpperCase()}
+                                                    </IonCol>
+                                                    <IonCol size="2" className='ion-text-right'>({x.children})</IonCol>
+                                                </IonRow>
+                                            </div>
+                                        </IonCol>
+                                    )
+                                }
+                            )}
+                        </IonRow>
+                    }
+                </div>
                 </IonCol>
-                <IonCol className="size-20 ion-padding">
+                <IonCol 
+                    className="size-16 ion-padding"
+                >
+                <div 
+                    className="size-16 ion-padding"
+                    style={{border:"1px solid #ddd", borderRadius:"20px"}}
+                >
+                    <IonRow>
+                        <IonCol style={{color:"#0070C0",fontWeight:"bold",size:"20px"}} className="size-24">
+                            <b>LIST DETAILS</b>
+                        </IonCol>
+                    </IonRow>
                     <IonRow 
-                        className="size-20 ion-text-bold"
-                        style={{borderBottom:"1px solid #ddd"}}
+                        className="size-16 ion-text-bold"
+                        style={{borderBottom:"0px solid #0070C0"}}
                     >
-                        <IonCol size="11">
+                        <IonCol size="10">
                             {addListItemView &&
                                 <IonRow>
                                     <IonCol 
@@ -292,17 +312,16 @@ const AdminList = (props:any) =>{
                         </IonCol>
                     </IonRow>
                     
-                    <IonRow className="size-20 ion-text-bold">
-                        <IonCol>ID</IonCol>
+                    <IonRow className="size-20 ion-text-bold" 
+                        style={{borderBottom:"3px solid #0070C0",color:"#0070C0",fontWeight:"bold",fontSize:"20px"}}
+                    >
+                        <IonCol size="1">ID</IonCol>
                         <IonCol>NAME</IonCol>
-                        <IonCol>CREATED DATE</IonCol>
-                        <IonCol>CREATED BY</IonCol>
-                        <IonCol>UPDATED DATE</IonCol>
-                        <IonCol>UPDATED BY</IonCol>
-                        <IonCol>ALTER</IonCol>
-                        <IonCol className="ion-text-center">STATUS</IonCol>
+                        <IonCol size="1">ALTER</IonCol>
+                        <IonCol size="2" className="ion-text-center">STATUS</IonCol>
                     </IonRow>
                     {list}
+                </div>
                 </IonCol>
             </IonRow>
         </div>

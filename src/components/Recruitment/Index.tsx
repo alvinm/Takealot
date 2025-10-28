@@ -9,11 +9,8 @@ import RecruitmentDashboard from "./Dashboard/Index";
 
 
 const Recruitment = (props:any) =>{
-   
-    
-    
-    
-    const [hubKey, setHubKey]                   = useState<any>(119)
+
+    const [hubKey, setHubKey]                   = useState<any>(0)
     const [driverKey, setDriverKey]             = useState<any>(0)
     const [schedulePerfomanceKey, setSchedulePerformanceKey]    = useState<any>(0)
     const [deliveryStatusKey, setDeliveryStatusKey]             = useState<any>(0)
@@ -48,20 +45,14 @@ const Recruitment = (props:any) =>{
         showAdminView(false)
     }
     useEffect(()=>{
-        setView(1)
+        setView(2)
+        setHubKey(props.hub_key)
     },[props])
     return(
            
             <div>
                 <div style={{position:"fixed",top:"1vh",width:"95%"}}>
                     <IonRow>
-                        <IonCol size='2'>
-                            <IonRow className='ion-padding'>
-                                <IonCol className='ion-padding' onClick={()=>{}}>
-                                    <IonImg src="../../public/images/IntelRock.JPG" style={{width:"200px"}}></IonImg>
-                                </IonCol>
-                            </IonRow>
-                        </IonCol>
                         <IonCol size="8" className="ion-text-center"></IonCol>
                         <IonCol 
                             size="2"
@@ -96,6 +87,7 @@ const Recruitment = (props:any) =>{
                     <IonCol>
                         <RecruitmentAdmin
                             state = {props.state}
+                            hub_key = {hubKey}
                             result={(e:any)=>{setView(e)}}
                         />
                     </IonCol>

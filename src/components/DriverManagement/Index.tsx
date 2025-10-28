@@ -25,7 +25,7 @@ const DriverManagement = (props:any) =>{
     const [complianceDetailView, showComplianceDetailView]                  = useState<any>()
     const [driverDemographicChartView, showDriverDemographicChartView]      = useState<any>(true)
     const [driverDemographicDetailView, showDriverDemographicDetailView]    = useState<any>()
-
+    const [selected, setSelected]       = useState<any>(1)
     const filterByWarning = () => {
         const filtered = driverList.filter((x:any) => x.warning > 0);
         setFilteredDriverList(filtered);
@@ -82,13 +82,16 @@ const DriverManagement = (props:any) =>{
         })
     }
     const setView = (v:any) =>{
+        setSelected(v);
         resetView()
         switch(v){
             case 1 : showComplianceDetailView(true)         
                     callComplianceList()
                     callDrivers()
                     ;break;
-            case 2 : showComplianceChartView(true)          ;break;
+            case 2 :showComplianceChartView(true);
+                    
+                    break;
             case 3 : showDriverDemographicChartView(true)   ;break;
             case 4 : showDriverDemographicDetailView(true)  ;break;
         }
@@ -120,45 +123,97 @@ const DriverManagement = (props:any) =>{
     },[props])
     return(
     <div>
-        <div style={{position:"fixed",top:"1vh",width:"85%"}}>
+        <div style={{width:"85%"}}>
             <IonRow>
-                <IonCol size='3'>
-                    <IonRow className='ion-padding'>
-                        <IonCol className='ion-padding' onClick={()=>{}}>
-                            <IonImg src="../../public/images/IntelRock.JPG" style={{width:"200px"}}></IonImg>
-                        </IonCol>
-                    </IonRow>
-                </IonCol>
-                <IonCol></IonCol>
                 <IonCol size="6">
                     <IonRow>
-                        <IonCol></IonCol>
                         <IonCol size="4">
                             {(complianceChartView ) &&
                                 
-                                <div className="text-container ion-padding" onClick={()=>{setView(1)}}>
-                                    <IonIcon icon={listOutline} className="size-20"></IonIcon> &nbsp;
-                                    Compliance Detail
+                                <div 
+                                    className="ion-padding ion-text-hove" 
+                                    style={{
+                                    backgroundColor:selected == 1 ?"#0070C0":"#eee",
+                                    color:selected == 1 ? "":"#000",
+                                    float:"left",
+                                    borderRadius:"20px",
+                                    width:"90%"
+                                    }}
+                                    onClick={()=>{setView(1)}}
+                                >
+                                    <IonRow>
+                                        <IonCol size="3">
+                                            <IonIcon icon={listOutline} className="size-32"></IonIcon> 
+                                        </IonCol>
+                                        <IonCol>
+                                            Compliance Detail
+                                        </IonCol>
+                                    </IonRow>
                                 </div>
                             }
                             {(!complianceChartView ) &&
-                                <div className="text-container ion-padding" onClick={()=>{setView(2)}}>
-                                    <IonIcon icon={analyticsOutline} className="size-20"></IonIcon> &nbsp;
-                                    Compliance Chart
+                                <div 
+                                    className="ion-padding ion-text-hove" 
+                                    style={{
+                                    backgroundColor:selected == 2 ?"#0070C0":"#eee",
+                                    color:selected == 2 ? "":"#000",
+                                    float:"left",
+                                    borderRadius:"20px",
+                                    width:"90%"
+                                    }}
+                                    onClick={()=>{setView(2)}}>
+                                    <IonRow>
+                                        <IonCol size="3">
+                                            <IonIcon icon={analyticsOutline} className="size-32"></IonIcon>
+                                        </IonCol>
+                                        <IonCol>
+                                            Compliance Chart
+                                        </IonCol>
+                                    </IonRow>
                                 </div>
                             }
                         </IonCol>
                         <IonCol size="4">
                             {(!driverDemographicChartView) &&
-                                <div className="text-container ion-padding" onClick={()=>{setView(3)}}>
-                                    <IonIcon icon={analyticsOutline} className="size-20"></IonIcon> &nbsp;
-                                    Driver Demographic Chart
+                                <div 
+                                    className="ion-padding ion-text-hove" 
+                                    style={{
+                                    backgroundColor:selected == 3 ?"#0070C0":"#eee",
+                                    color:selected == 3 ? "":"#000",
+                                    float:"left",
+                                    borderRadius:"20px",
+                                    width:"90%"
+                                    }}
+                                    onClick={()=>{setView(3)}}>
+                                    <IonRow>
+                                        <IonCol size="3">
+                                            <IonIcon icon={analyticsOutline} className="size-32"></IonIcon>
+                                        </IonCol>
+                                        <IonCol>
+                                             Driver Demographic Chart
+                                        </IonCol>
+                                    </IonRow>
                                 </div>
                             }
                             {(driverDemographicChartView) &&
-                                <div className="text-container ion-padding" onClick={()=>{setView(4)}}>
-                                    <IonIcon icon={listOutline} className="size-20"></IonIcon> &nbsp;
-                                    Driver Demographic Detail
+                                <div 
+                                    className="ion-padding ion-text-hove" 
+                                    style={{
+                                    backgroundColor:selected == 4 ?"#0070C0":"#eee",
+                                    color:selected == 4 ? "":"#000",
+                                    float:"left",
+                                    borderRadius:"20px",
+                                    width:"90%"
+                                    }}
+                                    onClick={()=>{setView(4)}}>
+                                    <IonRow>
+                                        <IonCol size="3">
+                                            <IonIcon icon={listOutline} className="size-32"></IonIcon>
+                                        </IonCol>
+                                        <IonCol>
+                                             Driver Demographic Detail
+                                        </IonCol>
+                                    </IonRow>
                                 </div>
                             }
                         </IonCol>

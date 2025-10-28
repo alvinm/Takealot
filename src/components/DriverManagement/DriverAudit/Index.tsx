@@ -80,26 +80,16 @@ const DriverAudit = (props:any) =>{
     },[props])
     return(
         <div>
-            <div style={{position:"fixed",top:"1vh",width:"85%"}}>
-                <IonRow>
-                    <IonCol size='3'>
-                        <IonRow className='ion-padding'>
-                            <IonCol className='ion-padding' onClick={()=>{}}>
-                                <IonImg src="../../public/images/IntelRock.JPG" style={{width:"200px"}}></IonImg>
-                            </IonCol>
-                        </IonRow>
-                    </IonCol>
-
-                </IonRow>
-            </div>
+            
             <IonRow>
-                <IonCol 
-                    size="3"
-                    className="size-20 ion-text-bold ion-padding"
-                    style={{borderRight:"3px solid #0070C0",height:"80vh"}}
-                >
-                    <IonRow className="size-20">
-                        <IonCol>Driver List</IonCol>
+                <IonCol size="3">
+                    <div 
+                        className="ion-padding"
+                        style={{border:"0.5px solid #ddd", borderRadius:"20px",height:"77vh"}}>
+                    <IonRow>
+                        <IonCol style={{color:"#0070C0",fontWeight:"bold",size:"20px"}} className="size-24">
+                            <b>DRIVER LIST</b>
+                        </IonCol>
                     </IonRow>
                     <IonRow style={{height:"75vh", overflowY:"auto"}}>
                         <IonCol>
@@ -133,50 +123,27 @@ const DriverAudit = (props:any) =>{
                             ))}
                         </IonCol>
                     </IonRow>
+                    </div>
                 </IonCol>
-                <IonCol>
-                    <IonRow className="size-20 ion-text-bold" style={{position:"fixed",width:"70%",zIndex:"2",backgrounColor:"#fff"}}>
-                        <IonCol size="2">Audit List</IonCol>
+                <IonCol size="8">
+                    <div 
+                        className="ion-padding"
+                        style={{border:"0.5px solid #ddd", borderRadius:"20px",height:"77vh"}}>
+                    <IonRow>
+                        <IonCol size="3" style={{color:"#0070C0",fontWeight:"bold",size:"20px"}} className="size-24">
+                            <b>AUDIT TESTS</b>
+                        </IonCol>
                         <IonCol size="2">
                             <div 
                                 className="ion-padding ion-text-center" 
-                                style={{color:"#0070C0",borderRadius:"30px",border:"0.5px solid #ccc",height:"60px"}}
+                                style={{color:"#0070C0",borderRadius:"30px",border:"0px solid #ccc",height:"60px"}}
                             >
-                                {driverName == undefined? "No Driver":driverName}
-                            </div>
-                        </IonCol>
-                        <IonCol></IonCol>
-                        <IonCol size="1">
-                            <div 
-                                onClick={()=>{setHubKey(0)}}
-                                className={hubKey == 0?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
-                                    All
-                            </div>
-                        </IonCol>
-                        <IonCol size="2">
-                            <div 
-                                onClick={()=>{setHubKey(119)}}
-                                className={hubKey == 119?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
-                                    Middleburg
-                            </div>
-                        </IonCol>
-                        <IonCol size="2">
-                            <div 
-                                onClick={()=>{setHubKey(222)}}
-                                className={hubKey == 222?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
-                                    Witbank
-                            </div>
-                        </IonCol>
-                        <IonCol size="2">
-                            <div 
-                                onClick={()=>{setHubKey(257)}}
-                                className={hubKey == 257?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
-                                    Secunda
+                                {/*driverName == undefined? "No Driver":driverName*/}
                             </div>
                         </IonCol>
                     </IonRow>
                     <IonRow>
-                        <IonCol style={{marginTop:"6vh"}} >
+                        <IonCol style={{}} >
                             <div style={{height:"75vh", overflowY:"auto"}}>
                                 {NewAuditView &&
                                 <div>
@@ -192,7 +159,7 @@ const DriverAudit = (props:any) =>{
                                 <IonRow className="ion-padding" >
                                     <IonCol size="8"  style={{}}>
                                         {audits.map((x: any,i:any) => (
-                                        <IonRow key={i} style={{fontSize:"20px",  borderBottom:"0.5px solid #ddd",marginTop:"4vh"}}>
+                                        <IonRow key={i} style={{fontSize:"20px",  borderBottom:"0.5px solid #ddd",}}>
                                             <IonCol size="12" >
                                                 <IonRow className="" >
                                                     <IonCol className="ion-text-left ion-text-bold">{i+1}). {x.item}</IonCol>
@@ -236,17 +203,16 @@ const DriverAudit = (props:any) =>{
                                         <IonCol size="8">
                                             <IonRow 
                                                 className="ion-padding size-20 ion-text-bold" 
-                                                style={{backgroundColor:"#0070C0",color:"#fff",}}
+                                                style={{borderBottom:"3px solid #0070C0"}}
                                             >
-                                                <IonCol></IonCol>
-                                                <IonCol size="2">LAST AUDIT</IonCol>
-                                                <IonCol size="7">NAME</IonCol>
-                                                <IonCol size="2" className="ion-text-right">SCORE</IonCol>
+                                                <IonCol className="ion-padding" style={{color:"#0070C0",fontWeight:"bold",fontSize:"20px"}} size="3">LAST AUDIT</IonCol>
+                                                <IonCol className="ion-padding" style={{color:"#0070C0",fontWeight:"bold",fontSize:"20px"}} size="7">NAME</IonCol>
+                                                <IonCol className="ion-padding ion-text-right" style={{color:"#0070C0",fontWeight:"bold",fontSize:"20px"}} size="2">SCORE</IonCol>
                                             </IonRow>
                                         </IonCol>
                                     </IonRow>
                                     <IonRow>
-                                        <IonCol size="8" className="ion-padding" style={{borderRight:"2px solid #0070C0"}}>
+                                        <IonCol size="9" className="ion-padding" style={{borderRight:"2px solid #0070C0"}}>
                                             {auditHistoryData.map((x:any, i:number)=>(
                                                 <IonRow
                                                     onClick={()=>{callAuditHistoryDetail(formatDate(x.created_date))}}
@@ -342,6 +308,7 @@ const DriverAudit = (props:any) =>{
                             </div>
                         </IonCol>
                     </IonRow>
+                    </div>
                 </IonCol>
             </IonRow>
         </div>

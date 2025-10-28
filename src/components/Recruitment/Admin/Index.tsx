@@ -5,6 +5,7 @@ import { formatDate } from '../../GlobalFunctions/Functions'
 import ImageUpload from '../../ImageUpload/ImageUpload'
 import CaptureResponses from '../Capture/Index'
 import DriverComplianceDetail from '../../DriverManagement/DriverComlianceDetail/Index'
+import InputForecast from '../Capture/Forecast/Index'
 
 const RecruitmentAdmin  = (props:any) =>{
     const [listId, setListId]                   = useState<any>()
@@ -28,15 +29,19 @@ const RecruitmentAdmin  = (props:any) =>{
     const [month, setMonth]                                  = useState<any>(6)
     const [week, setWeek]                                    = useState<any>(0)
              
-    const [hubKey, setHubKey]                                = useState<any>(119)
+    const [hubKey, setHubKey]                                = useState<any>(0)
     const [stage, setStage]                                  = useState<any>(0)
              
     const [advertList, setAdvertList]                        = useState<any>()
     const [uploadAdvert, showUploadAdvert]                   = useState<any>()
     const [captureNewDriver, showCaptureNewDriver]           = useState<any>()
     const [complianceUpdateView, showComplianceUpdateView]   = useState<any>()
+    const [forecastView, showForecastView]                   = useState<any>()
+    
     const [complianceUpdateData, setComplianceUpdateData]    = useState<any>([])
+    
     const [driverId, setDriverId]                            = useState<any>()
+    const [statusData, setStatusData]                        = useState<any>([])
     
     let Controller = new AbortController();
 
@@ -75,12 +80,6 @@ const RecruitmentAdmin  = (props:any) =>{
         }
         filename = filename.replaceAll('"','')
         console.log(filename)
-            //
-            //// Add file extension if needed (PDF as an example)
-            //if (!filename.includes('.')) {
-            //    filename += '.pdf'; 
-            //}
-            //
                 a.download = filename;
 
                 // Append, trigger click, and clean up
@@ -95,15 +94,7 @@ const RecruitmentAdmin  = (props:any) =>{
             console.error('Download failed:', error);
         }
     }
-    //const callContactComplianceList = (contact_id:any) =>{
-    //    fetch(props.state.secondary_host+'getAdminData?dbo=select_driver_compliance_list'+
-    //        "&contact_id="+contact_id+
-    //        "&hub_key="+hubKey+
-    //        "&created_by="+props.state.user_id
-    //    )
-    //    .then((response) => response.json())
-    //    .then(setComplianceUpdateData)
-    //}
+
     const callStatusList = () =>{
         // Abort any ongoing request
         Controller.abort();
@@ -116,24 +107,22 @@ const RecruitmentAdmin  = (props:any) =>{
         .then((response) => response.json())
         .then(data=>{
             const sortedData = [...data].sort((a, b) => a.id - b.id);
+            setStatusData(sortedData)
             const lists = sortedData.map((x:any, i:number)=>{
                 return(
-                    <IonRow key={i}>
-                        <IonCol >
-                            <div className={listId==x.id?"selected-container ion-padding ion-text-center":"text-container ion-padding ion-text-center"} onClick={()=>{setStage(x.id)}}>
+                        <IonCol key={i} size="1" title={x.id}>
+                            <div className={listId==x.id?"":""} onClick={()=>{setStage(x.id)}}>
                                 <IonRow>
-                                    <IonCol size="1">{x.id}</IonCol>
                                     <IonCol className='ion-text-left'>{x.name}</IonCol>
-                                    <IonCol size="2" className='ion-text-right'></IonCol>
                                 </IonRow>
                             </div>
                         </IonCol>
-                    </IonRow>
                 )
             })
             setStatusList(lists)
         })
     }
+    
 
     const callWeeks = async (m: number) => {
         try {
@@ -165,7 +154,7 @@ const RecruitmentAdmin  = (props:any) =>{
                     onClick={() => {
                     setWeek(x.week_of_year);
                     setStartDate(x.start_date);
-                    setEndDate(x.end_date);
+
                     }}
                 >
                     <IonRow>
@@ -371,27 +360,41 @@ const RecruitmentAdmin  = (props:any) =>{
 
     useEffect(()=>{
         callStatusList()
+        setHubKey(props.hub_key)
     },[props])
     return(
         <div>
-           
             <IonRow>
-                <IonCol 
-                    size="3" 
-                    className="size-20 ion-text-bold ion-padding"
-                    style={{borderRight:"3px solid #0070C0",height:"80vh"}}
-                >
-                    <IonRow className="size-28">
-                        <IonCol>Recruitment Status</IonCol>
-                    </IonRow>
-                    <IonRow>
-                        <IonCol>
-                            {statusList}
-                        </IonCol>
-                    </IonRow>
-                </IonCol>
+                {statusData.map((x:any, i:number)=>{
+                    return(
+                    <IonCol size="1" className="ion-padding ion-text-hover ion-text-center">
+                        <div
+                            onClick={()=>{setStage(x.id)}}
+                            className="ion-padding ion-text-hover"
+                            style={{
+                                backgroundColor:stage == x.id ?"#eef":"#eee",
+                                color:stage == x.id ? "#0070C0":"#000",
+                                float:"left",
+                                borderRadius:"20px",
+                                width:"90%"
+                            }}
+                        >
+                            {x.name}
+                        </div>
+                    </IonCol>
+                    )
+                })}
+                
+            </IonRow>
+            <IonRow>
                 <IonCol>
-                    <IonRow>
+                    
+                   { stage == 3 &&
+                    <div className="ion-padding" style={{border:"1px solid #ccc",borderRadius:"10px",margin:"5px",height:"50vh"}}>
+                        <IonRow>
+                            <IonCol size="4" className="ion-text-bold size-32">Advert</IonCol>
+                        </IonRow>
+                        <IonRow>
                         <IonCol className="size-28 ion-text-bold">
                             Load Recruitment Requirements
                         </IonCol>
@@ -446,11 +449,6 @@ const RecruitmentAdmin  = (props:any) =>{
                     </IonRow>
                     <IonRow><IonCol>&nbsp;</IonCol></IonRow>
                     <IonRow><IonCol>&nbsp;</IonCol></IonRow>
-                   { stage == 3 &&
-                    <div className="ion-padding" style={{border:"1px solid #ccc",borderRadius:"10px",margin:"5px",height:"50vh"}}>
-                        <IonRow>
-                            <IonCol size="4" className="ion-text-bold size-32">Advert</IonCol>
-                        </IonRow>
                         <IonRow >
                             <IonCol size="1" className="ion-padding">
                                 <IonIcon icon={cloudUploadOutline} className="size-32"></IonIcon>
@@ -475,12 +473,13 @@ const RecruitmentAdmin  = (props:any) =>{
                                         <ImageUpload
                                             state = {props.state}
                                             hub_key={hubKey}
-                                            status_id={stage}
+                                            reference_id={stage}
+                                            document_type_id={80}
+                                            department_id={14}
                                             year={year}
                                             week_no={week}
                                             value="0"
-                                            created_by={props.state.user_id}
-                                            media_name = {mediaName}
+                                            description = {mediaName}
                                             result={(e:any)=>{callRecruitmentStatus()}}
                                     />
                                    </IonCol>
@@ -613,6 +612,16 @@ const RecruitmentAdmin  = (props:any) =>{
                             {responseList}
                         </IonCol>
                     </IonRow>
+                    </div>
+                    }
+                    { stage == 11 &&
+                    <div>
+                        <InputForecast
+                            state={props.state}
+                            hub_key={hubKey}
+                            year={year}
+                            start_date={startDate}
+                        />
                     </div>
                     }
                     { stage == 17 &&

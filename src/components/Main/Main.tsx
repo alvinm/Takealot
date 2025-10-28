@@ -4,7 +4,7 @@ import { IonButton, IonCol, IonIcon, IonImg, IonItem, IonLabel, IonRow, IonSelec
 import ColumnChart from '../Charts/ColumnChart'
 import { dateTimeFormat } from 'highcharts'
 import DateSlider from '../Objects/DateSlider/DateSlider'
-import { alarmOutline, alarmSharp, alertCircleSharp, checkmarkCircleSharp, refreshCircleSharp } from 'ionicons/icons'
+import { alarmOutline, alarmSharp, alertCircleSharp, checkmarkCircleSharp, closeCircleOutline, refreshCircleSharp, time, timer } from 'ionicons/icons'
 import DriverStatusList from '../DriverManagement/DriverStatusList/DriverDeliveryStatusListLate'
 import DriverDeliveryStatusListLate from '../DriverManagement/DriverStatusList/DriverDeliveryStatusListLate'
 
@@ -208,12 +208,24 @@ const Main = (props:any) =>{
         )
         .then((response) => response.json())
         .then(data=>{
+            var stripe = 0
             var list = data.map((x:any,i:number)=>{
+                if (stripe == 0){   
+                    stripe = 1
+                }else{
+                    stripe = 0
+                }
+
                 return(
-                    <IonRow key={i} className="ion-row-hover"
+                    <IonRow 
+                        key={i} className="ion-row-hover"
                         onClick={()=>{setDeliveryStatusKey(x.delivery_status_key)}}
+                        style={{marginBottom:"0px", backgroundColor:stripe == 1?"#eef":""}}
                     >
-                        <IonCol className='size-16 ion-text-bold ion-text-left' size="6">{x.delivery_status_desc}</IonCol>
+                        <IonCol 
+                            className='size-16 ion-text-bold ion-text-left ellipsis-text' 
+                            style={{color:"#999", borderRight:"3px solid #0070C0",height:"30px"}}
+                            size="4">{x.delivery_status_desc.toUpperCase()}</IonCol>
                         <IonCol className='size-16 ion-text-right' size="">{addCommas(x.ontime/1)}</IonCol>
                         <IonCol className='size-16 ion-text-right' size="">{addCommas(x.late/1)}</IonCol>
                         <IonCol className='size-16 ion-text-right' size="">{addCommas(x.failed/1)}</IonCol>
@@ -322,89 +334,7 @@ const Main = (props:any) =>{
             showDailySpinner(false)
         }) 
     }
-    //const callFactDeliveriesDriver = () =>{
-    //    showDriverSpinner(true)
-    //    // Abort any ongoing request
-    //    Controller.abort();
-
-    //    // Create a new AbortController for this request
-    //    Controller = new AbortController();
-    //    fetch(props.state.secondary_host+'getData?dbo=select_fact_deliveries_driver'+
-    //        '&start_date				='+startDate+
-    //        '&end_date					='+endDate+
-    //        '&hub_key					='+hubKey+
-    //        '&driver_key				='+driverKey+
-    //        '&schedule_performance_key	='+schedulePerfomanceKey+
-    //        '&delivery_status_key		='+deliveryStatusKey+
-    //        '&order_type_key			='+orderTypeKey+
-    //        '&order_status_key			='+orderStatusKey
-    //    )
-    //    .then((response) => response.json())
-    //    .then(data=>{
-    //       
-    //        var list:any = data.map((x:any, i:number)=>{
-    //            return(
-    //                <IonRow 
-    //                    key={i}
-    //                    className=" size-16 "
-    //                    style={{marginBottom:"5px",}}
-    //                    
-    //                >
-    //                    <IonCol size="3" className='ion-text-hover' 
-    //                        onClick={()=>{
-    //                            setDriverName(x.driver_name)
-    //                            setDriverKey(x.driver_key)
-    //                        }}>
-    //                        <div 
-    //                            style={{
-    //                            width:"24px",
-    //                            height:"24px", 
-    //                            borderRadius:"24px", 
-    //                            fontWeight:"bold",
-    //                            background:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"", 
-    //                            float:"left"
-    //                        }}></div>&nbsp;&nbsp;
-    //                        {x.driver_name}
-    //                    </IonCol>
-    //                    <IonCol className='ion-text-right'>{addCommas(x.on_time/1)}</IonCol>
-    //                    <IonCol 
-    //                        className='ion-text-right ion-text-hover'
-    //                        onClick={()=>{
-    //                            setDriverName(x.driver_name)
-    //                            callFactDeliveriesDetail(1,0,x.driver_key)
-    //                        }}
-    //                        style={{
-    //                            color:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"",
-    //                        }}    
-    //                    >{addCommas(x.early/1)}</IonCol>
-    //                    <IonCol 
-    //                        className='ion-text-right ion-text-hover'
-    //                        onClick={()=>{
-    //                            setDriverName(x.driver_name)
-    //                            callFactDeliveriesDetail(1,0,x.driver_key)
-    //                        }}
-    //                        style={{
-    //                            color:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"",
-    //                        }}    
-    //                    >{addCommas(x.late/1)}</IonCol>
-    //                    <IonCol 
-    //                        className='ion-text-right ion-text-hover'
-    //                        onClick={()=>{
-    //                            setDriverName(x.driver_name)
-    //                            callFactDeliveriesDetail(0,1, x.driver_key)
-    //                        }}
-    //                        style={{
-    //                            color:(((x.late/1)/(x.on_time/1)*100) > 0.75 && (x.late/1)/(x.on_time/1)*100 < 1) ? "orange": ((x.late/1)/(x.on_time/1)*100) > 1? "red":"",
-    //                        }}    
-    //                    >{addCommas(x.failed/1)}</IonCol>
-    //                    <IonCol className='ion-text-right'>{((x.late/1)/(x.on_time/1)*100).toFixed(2)}</IonCol>
-    //                </IonRow>
-    //            )
-    //        })
-    //        setDriverList(list)
-    //        showDriverSpinner(false)
-    //    }) 
-    //}
+    
     const setView = (v:any) =>{
         resetView()
         switch(v){
@@ -514,31 +444,55 @@ const Main = (props:any) =>{
     return(
         <div style={{overflowY:"auto"}} className="ion-padding">
             
-                <div style={{position:"fixed",top:"1vh",width:"85%"}}>
-                    <IonRow>
-                        <IonCol size='3'>
-                            <IonRow className='ion-padding'>
-                                <IonCol className='ion-padding' onClick={()=>{}}>
-                                    <IonImg src="../../public/images/IntelRock.JPG" style={{width:"200px"}}></IonImg>
-                                </IonCol>
-                            </IonRow>
-                        </IonCol>
-                        <IonCol size="6" className="ion-text-center">
-                            {dateSlider &&
-                                <DateSlider
-                                    minDate={new Date('2025-04-01')}
-                                    maxDate={new Date(maxDate)}
-                                    onChange={handleDateChange}
-                                />
-                            }
-                        </IonCol>
-                        <IonCol size="2"></IonCol>
-                    </IonRow>
-                </div>
             {main &&
-            
+            <div>
+            <IonRow>
+                <IonCol></IonCol>
+            </IonRow>
             <IonRow>
                 <IonCol size="6">
+                    <IonRow className="ion-text-center size-20" >
+                        <IonCol onClick={()=>{setView(1)}} size="4" className="ion-padding">
+                            <div 
+                                className="ion-padding ion-text-hover"
+                                style={{
+                                    backgroundColor:selected == 1 ?"#eef":"#eee",
+                                    color:selected == 1 ? "#0070C0":"#000",
+                                    float:"left",
+                                    borderRadius:"20px",
+                                    width:"90%"
+                                }}>
+                                <IonRow>
+                                    <IonCol size="3">
+                                        <IonIcon icon={time} className="size-32"></IonIcon>
+                                    </IonCol>
+                                    <IonCol>
+                                        Late Delivery
+                                    </IonCol>
+                                </IonRow>
+                            </div>
+                        </IonCol>
+                        <IonCol onClick={()=>{setView(2)}} size="4" className="ion-padding">
+                            <div
+                                className="ion-padding ion-text-hover"
+                                style={{
+                                    backgroundColor:selected == 2 ?"#eef":"#eee",
+                                    color:selected == 2 ? "#0070C0":"#000",
+                                    float:"left",
+                                    borderRadius:"20px",
+                                    width:"90%"
+                                }}>
+                                <IonRow>
+                                    <IonCol size="3">
+                                        <IonIcon icon={closeCircleOutline} className="size-32"></IonIcon>
+                                    </IonCol>
+                                    <IonCol>
+                                        Failed Delivery
+                                    </IonCol>
+                                </IonRow>
+                            </div>
+                        </IonCol>
+                    </IonRow>
                     <IonRow>
                         <IonCol>
                             <div className={selected==1?"selected-container ion-padding ion-text-center":"text-container ion-padding ion-text-center"} onClick={()=>{setMonth(1)}}>Jan</div>
@@ -580,7 +534,6 @@ const Main = (props:any) =>{
                 </IonCol>
                 <IonCol>
                     <IonRow>
-                        
                         <IonCol className="ion-text-center">
                             <IonRow className="ion-padding">
                                 <IonCol size="3" className="">
@@ -605,55 +558,25 @@ const Main = (props:any) =>{
                                 <IonCol className='ion-text-left'>Breach</IonCol>
                             </IonRow>
                         </IonCol>
-                        <IonCol size="1">
-                            <div 
-                                onClick={()=>{setHubKey(0)}}
-                                className={hubKey == 0?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
-                                    All
-                            </div>
-                        </IonCol>
-                        <IonCol size="2">
-                            <div 
-                                onClick={()=>{setHubKey(119)}}
-                                className={hubKey == 119?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
-                                    Middleburg
-                            </div>
-                        </IonCol>
-                        <IonCol size="2">
-                            <div 
-                                onClick={()=>{setHubKey(222)}}
-                                className={hubKey == 222?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
-                                    Witbank
-                            </div>
-                        </IonCol>
-                        <IonCol size="2">
-                            <div 
-                                onClick={()=>{setHubKey(257)}}
-                                className={hubKey == 257?"ion-text-center selected-container ion-padding":"ion-text-center text-container ion-padding"}>
-                                    Secunda
-                            </div>
-                        </IonCol>
                     </IonRow>
                 </IonCol>
-            </IonRow>}
+            </IonRow>
+            </div>
+            }
             {main &&
             <IonRow>
                 <IonCol 
+                    size="8"
                     className="ion-padding"
-                    style={{borderRight:"3px solid #0070C0",height:"80vh"}}
+                    style={{borderRight:"0px solid #0070C0",height:"90vh"}}
                 >
                     <IonRow 
                         className="ion-padding"
-                        style={{borderBottom:"3px solid #0070C0",height:"42vh"}}
+                        style={{borderBottom:"0px solid #0070C0",height:"39vh", border:"0.5px solid #ddd", borderRadius:"20px"}}
                     >
                         <IonCol size="12">
                             <IonRow>
                                 <IonCol>
-                                <IonLabel 
-                                    className='size-24 ion-text-center ion-text-bold'
-                                    style={{backgroundColor:"#0070C0",borderRadius:"30px", height:"60px", width:"auto", padding:"15px", color:"#fff"}}
-                                >Daily Performance&nbsp;&nbsp;{dailySpinner &&<IonSpinner className='size-28'></IonSpinner>}
-                                </IonLabel>
                                 {chart &&
                                     <ColumnChart
                                         chart_type="column"
@@ -681,15 +604,17 @@ const Main = (props:any) =>{
                                 </IonCol>
                                 }
                             </IonRow>
-                             <div className="size-14 ion-text-left" style={{border:"0px solid #ccc", height:"20vh", width:"100%",borderRadius:"20px",marginLeft:"0%", overflowY:"auto"}}>
+                             <div 
+                                className="size-14 ion-text-left" 
+                                style={{borderBottom:"3px solid #0070C0",border:"0px solid #ccc", height:"20vh", width:"100%",borderRadius:"20px",marginLeft:"0%", overflowY:"auto"}}>
                                 <div style={{}}>
                                 <IonRow>
                                     <IonCol size="12">
-                                        <IonRow  className='ion-text-bold ' style={{backgroundColor:"#0070C0"}}>
-                                            <IonCol size="6" style={{color:"#fff",}}className='size-16 ion-text-bold ion-text-left'>STATUS</IonCol>
-                                            <IonCol size=""  style={{color:"#fff",}}className='size-16 ion-text-bold ion-text-right'>ON TIME</IonCol>
-                                            <IonCol size=""  style={{color:"#fff",}}className='size-16 ion-text-bold ion-text-right'>LATE</IonCol>
-                                            <IonCol size=""  style={{color:"#fff",}}className='size-16 ion-text-bold ion-text-right'>FAILED</IonCol>
+                                        <IonRow  className='ion-text-bold '>
+                                            <IonCol size="4"style={{fontSize:"16px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-left ion-padding">STATUS</IonCol>
+                                            <IonCol size="" style={{fontSize:"16px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right ion-padding">ON TIME</IonCol>
+                                            <IonCol size="" style={{fontSize:"16px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right ion-padding">LATE</IonCol>
+                                            <IonCol size="" style={{fontSize:"16px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right ion-padding">FAILED</IonCol>
                                         </IonRow>
                                         {deliveryStatusList}
                                     </IonCol>
@@ -699,13 +624,21 @@ const Main = (props:any) =>{
                         </IonCol>
                         <IonCol className="ion-text-center ion-padding">
                             <div className="ion-text-bold size-28">Late Deliveries</div>
-                            <div style={{border:"1px solid #ccc", height:"20vh", width:"95%",borderRadius:"20px",marginLeft:"10%",overflowY:"auto"}}>
+                            <div style={{border:"1px solid #ccc", height:"30vh", width:"95%",borderRadius:"20px",marginLeft:"10%",overflowY:"auto"}}>
                                 <IonRow>
                                     <IonCol style={{fontSize:'42px'}} className='ion-padding'>
                                         {performance}%
                                         <div style={{fontSize:'14px'}}>PERFORMANCE</div>
+                                    </IonCol>
+                                </IonRow>
+                                <IonRow>
+                                    <IonCol>
                                         <div style={{fontSize:'28px'}}>{onTime}</div>
                                         <div style={{fontSize:'14px'}}>DELIVERIES ON TIME</div>
+                                    </IonCol>
+                                </IonRow>
+                                <IonRow>
+                                    <IonCol>
                                         <div style={{fontSize:'32px',color:"red",fontWeight:"bold"}}>{late}</div>
                                         <div style={{fontSize:'14px'}}>LATE</div>
                                     </IonCol>
@@ -714,7 +647,7 @@ const Main = (props:any) =>{
                         </IonCol>
                         <IonCol className="ion-text-center ion-padding">
                             <div className="ion-text-bold size-28">Target Drivers</div>
-                            <div style={{border:"1px solid #ccc", height:"20vh", width:"96%",borderRadius:"20px",marginLeft:"10%",overflowY:"auto"}}>
+                            <div style={{border:"1px solid #ccc", height:"30vh", width:"96%",borderRadius:"20px",marginLeft:"10%",overflowY:"auto"}}>
                                 <IonRow>
                                     <IonCol style={{fontSize:'42px'}} className='ion-padding'>
                                         {driverForecastedCount}
@@ -744,6 +677,11 @@ const Main = (props:any) =>{
                 </IonCol>
             </IonRow>
             }
+
+
+
+
+
             {detail &&
             <div>
             

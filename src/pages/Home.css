@@ -262,3 +262,18 @@
   pointer-events: none;
   opacity: 0.5;
 }
+.parent-rows .child-row:nth-child(odd) {
+  background-color: #ffffff; /* white */
+}
+
+.parent-rows .child-row:nth-child(even) {
+  background-color: #f7f7f7; /* light grey */
+}
+ion-input {
+  --background: var(--ion-background-color, #fff);
+}
+
+ion-input input {
+  background: transparent !important;
+  box-shadow: none !important;
+}

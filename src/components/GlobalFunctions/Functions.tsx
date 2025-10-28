@@ -86,3 +86,11 @@ export const callProductImage = async (props:any) =>{
   console.log(url)
   return url
 }
+
+export function ArrayHasValue(arr:any, key:any, value:any) {
+  // Ensure input is valid
+  if (!Array.isArray(arr) || !key) return false;
+
+  // Check each object in the array
+  return arr.some(item => item[key] === value);
+}

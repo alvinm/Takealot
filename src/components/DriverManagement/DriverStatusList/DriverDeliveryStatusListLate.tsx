@@ -19,7 +19,7 @@ const DriverDeliveryStatusListLate = (props:any) =>{
             '&start_date				='+props.params.start_date+
             '&end_date					='+props.params.end_date+
             '&hub_key					='+props.params.hub_key+
-            '&driver_key				='+driverKey+
+            '&driver_key				='+props.params.driver_key+
             '&schedule_performance_key	='+props.params.schedule_performance_key+
             '&delivery_status_key		='+props.params.delivery_status_key+
             '&order_type_key			='+props.params.order_type_key+
@@ -27,17 +27,23 @@ const DriverDeliveryStatusListLate = (props:any) =>{
         )
         .then((response) => response.json())
         .then(data=>{
-        
+            var stripe = 0
             var list:any = data.map((x:any, i:number)=>{
                 var total:any = (x.on_time/1)+(x.early/1)+(x.failed/1)
+                if (stripe == 0){   
+                    stripe = 1
+                }else{
+                    stripe = 0
+                }
                 return(
                     <IonRow 
                         key={i}
                         className=" size-16 "
-                        style={{marginBottom:"5px",}}
+                        style={{marginBottom:"0px", backgroundColor:stripe == 1?"#eef":""}}
                         
                     >
-                        <IonCol size="3" className='ion-text-hover' 
+                        <IonCol className='ion-text-hover' 
+                            style={{color:"#999", borderRight:"4px solid #0070C0",height:"40px"}}
                             onClick={()=>{
                                 props.driver_name(x.driver_name)
                                 setDriverKey(x.driver_key)
@@ -51,11 +57,11 @@ const DriverDeliveryStatusListLate = (props:any) =>{
                                 background:(((x.late/1)/(total/1)*100) > 0.75 && (x.late/1)/(x.total/1)*100 < 1) ? "orange": ((x.late/1)/(x.total/1)*100) > 1? "red":"", 
                                 float:"left"
                             }}></div>&nbsp;&nbsp;
-                            {x.driver_name}
+                            {x.driver_name.toUpperCase()}
                         </IonCol>
-                        <IonCol className='ion-text-right'>{addCommas(x.on_time/1)}</IonCol>
-                        
+                        <IonCol size="2" className='ion-text-right'>{addCommas(x.on_time/1)}</IonCol>
                         <IonCol 
+                            size="2"
                             className='ion-text-right ion-text-hover'
                             onClick={()=>{
                                 props.driver_name(x.driver_name)
@@ -67,7 +73,7 @@ const DriverDeliveryStatusListLate = (props:any) =>{
                                 color:(((x.late/1)/(total/1)*100) > 0.75 && (x.late/1)/(total/1)*100 < 1) ? "orange": ((x.late/1)/(x.total/1)*100) > 1? "red":"",
                             }}    
                         >{addCommas(x.late/1)}</IonCol>
-                        <IonCol className='ion-text-right'>{((x.late/1)/(total)*100).toFixed(2)}</IonCol>
+                        <IonCol size="2" className='ion-text-right'>{((x.late/1)/(total)*100).toFixed(2)}</IonCol>
                     </IonRow>
                 )
             })
@@ -82,33 +88,35 @@ const DriverDeliveryStatusListLate = (props:any) =>{
         callFactDeliveriesDriver()
     },[props])
     return(
-        <div>
+        <div style={{borderBottom:"0px solid #0070C0",height:"75vh", border:"0.5px solid #ddd", borderRadius:"20px"}}>
             <IonRow>
                 <IonCol>
-                    <IonRow style={{backgroundColor:"#0070C0"}}>
-                        <IonCol size="3"className='size-16 ion-text-center ion-text-bold text-white' style={{color:"#fff"}}>
-                                Driver &nbsp;&nbsp;
-                            {driverSpinner &&<IonSpinner className='size-28'></IonSpinner>}
-                        </IonCol>
-                        <IonCol style={{fontSize:"16px", padding:"15px",color:"#fff",fontWeight:"bold"}} className="ion-text-right">On Time</IonCol>
-                        <IonCol style={{fontSize:"16px", padding:"15px",color:"#fff",fontWeight:"bold"}} className="ion-text-right">Late</IonCol>
-                        <IonCol style={{fontSize:"16px", padding:"15px",color:"#fff",fontWeight:"bold"}} className="ion-text-right">% Late</IonCol>
-                    </IonRow>
-                    {(driverKey != 0)  &&
                     <IonRow>
-                        <IonCol>
-                            <div 
-                                onClick={()=>{setDriverKey(0)}}
-                                className='size-24 ion-text-center ion-text-bold ion-text-hover'
-                                style={{backgroundColor:"#000",borderRadius:"30px", height:"60px", width:"auto", padding:"15px", color:"#fff", opacity:"0.6"}}
-                            >All Drivers</div>
+                        <IonCol className='size-20 ion-text-left' style={{color:'#0070C0'}}>
+                            <b>DRIVER LATES </b>
                         </IonCol>
-                        <IonCol style={{fontSize:"28px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right"></IonCol>
-                        <IonCol style={{fontSize:"28px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right"></IonCol>
-                        <IonCol style={{fontSize:"28px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right"></IonCol>
+                        <IonCol size="3">
+                            {(driverKey != 0)  &&
+                                <div 
+                                    onClick={()=>{setDriverKey(0)}}
+                                    className='size-16 ion-text-center ion-text-bold ion-text-hover'
+                                    style={{backgroundColor:"#eef",borderRadius:"30px", height:"60px", width:"auto", padding:"15px", color:"#0070C0",}}
+                                >
+                                    VIEW ALL
+                                </div>
+                            }
+                        </IonCol>
                     </IonRow>
-                    }
-                    <div style={{overflowY:"auto",height:"80vh"}}>
+                    <IonRow style={{borderBottom:"3px solid #0070C0", /*borderTop:"2px solid #0070C0"*/}}>
+                        <IonCol style={{fontSize:"18px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-left ion-padding">
+                            DRIVER
+                            &nbsp;&nbsp;{driverSpinner &&<IonSpinner className='size-16'></IonSpinner>}
+                        </IonCol>
+                        <IonCol size="2" style={{fontSize:"18px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right ion-padding">ON TIME</IonCol>
+                        <IonCol size="2" style={{fontSize:"18px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right ion-padding">LATE</IonCol>
+                        <IonCol size="2" style={{fontSize:"18px", padding:"15px",color:"#0070C0",fontWeight:"bold"}} className="ion-text-right ion-padding">%</IonCol>
+                    </IonRow>
+                    <div style={{overflowY:"auto",height:"65vh"}}>
                         {driverList}
                     </div>
                 </IonCol>

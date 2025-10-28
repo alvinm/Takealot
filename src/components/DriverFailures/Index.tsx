@@ -5,6 +5,7 @@ import DateSlider from "../Objects/DateSlider/DateSlider";
 import PieChart2 from "../Charts/PieChart2";
 import { PieChart } from "recharts";
 import PieChart3 from "../Charts/PieChart3";
+import CustomSimpleBarChart from "../Charts/CustomBarChart";
 
 const DriverFailures = (props:any) =>{
     const [selected, setSelected]                           = useState<any>(6)
@@ -61,7 +62,7 @@ const DriverFailures = (props:any) =>{
             .then(data=>{
                 var d:any = []
                 data.map((x:any)=>(
-                        d.push({name:x.delivery_status_desc, y:x.failed/1, hub_key:x.hub_key, hub:x.hub, id:x.country_id})
+                        d.push({name:x.delivery_status_desc, y:x.failed/1, hub_key:x.hub_key, hub:x.hub, id:x.country_id, branch_id:x.hub_key/1, value:x.failed/1})
                     ))
                 console.log(d)
                 setDeliveryStatusData(d)
@@ -82,7 +83,7 @@ const DriverFailures = (props:any) =>{
                 .then(data=>{
                     var d:any = []
                     data.map((x:any)=>(
-                        d.push({name:x.order_status_desc, y:x.failed/1, hub_key:x.hub_key, hub:x.hub, id:x.country_id})
+                        d.push({name:x.order_status_desc, y:x.failed/1, hub_key:x.hub_key, hub:x.hub, id:x.country_id, branch_id:x.hub_key/1, value:x.failed/1})
                         //console.log(x.failed/(Math.max(...data.map((hub:any) => Math.max(hub.failed/1)))))
                     ))
                     console.log(d)
@@ -116,6 +117,10 @@ const DriverFailures = (props:any) =>{
     useEffect(()=>{
         callOrderStatus()
         callFactDeliveryStatusSummary()
+    },[driverKey])
+    useEffect(()=>{
+        callOrderStatus()
+        callFactDeliveryStatusSummary()
     },[props])
     return(
         <div>
@@ -146,75 +151,41 @@ const DriverFailures = (props:any) =>{
             <IonRow><IonCol></IonCol></IonRow>
             <IonRow>
                 <IonCol size="8">
-                    <IonRow>
-                        <IonCol size="6" className="ion-padding">
-                        <div style={{marginBottom:"2px",borderBottom:"1px solid #fff"}}>
-                            <div style={{float:"left",width:"40%"}} className="ellipsis-text ion-text-bold">FAILED DELIVERY DESC</div>
-                            <div style={{float:"left",width:"60%"}} className="ion-text-right ion-text-bold">COUNT</div>
-                        </div>
-                         {deliveryStatusData
-                            .sort((a: any, b: any) => b.y/1 - a.y/1)
-                            .map((x:any,i:number)=>(
-                                <div 
-                                    key={i} 
-                                    style={{marginBottom:"2px",borderBottom:"1px solid #fff"}} 
-                                    className="ion-text-hover"
-                                    onClick={()=>{
-                                        var option:any = []
-                                        option.push({
-                                            hub_key:257, 
-                                            range:x.range
-                                        })
-                                        //props.result(option[0])
-                                    }}
-                                > 
-                                    <div style={{float:"left",width:"20%"}} className="ellipsis-text">{x.name}</div>
-                                    <div style={{float:"left",width:"70%", height:"30px"}} className="">
-                                        <div style={{height:"25px",width:(x.y/(Math.max(...orderStatusData.map((hub:any) => Math.max(hub.y/1)))))*100+"%",backgroundColor:( x.range == "No Age" || x.range == "0 - 17" )?"#DC3545":"#aaa"}}></div>
-                                    </div>
-                                    <div style={{float:"left",width:"10%"}} className="ion-text-right ion-bold-text">({x.y})</div>
-                                </div>
-                            ))}
+                    <IonRow >
+                        <IonCol className="ion-padding" size="6">
+                            <CustomSimpleBarChart
+                                data={deliveryStatusData}
+                                header="DELIVERIES BY STATUS"
+                                chart_column_1="DELIVERY METRIC"
+                                chart_column_2=""
+                                chart_column_3="COUNT"
+                                branch={hubKey}
+                                result={(e:any)=>{setHubKey(e.hub_key);}}
+                            />
                         </IonCol>
-                        <IonCol size="6" className="ion-padding">
-                            <div style={{marginBottom:"2px",borderBottom:"1px solid #fff"}}>
-                                <div style={{float:"left",width:"40%"}} className="ellipsis-text ion-text-bold">FAILED ORDER DESC</div>
-                                <div style={{float:"left",width:"60%"}} className="ion-text-right ion-text-bold">COUNT</div>
-                            </div>
-                         {orderStatusData
-                            .sort((a: any, b: any) => b.y/1 - a.y/1)
-                            .map((x:any,i:number)=>(
-                                <div 
-                                    key={i} 
-                                    style={{marginBottom:"2px",borderBottom:"1px solid #fff"}} 
-                                    className="ion-text-hover"
-                                    onClick={()=>{
-                                        var option:any = []
-                                        option.push({
-                                            hub_key:257, 
-                                            range:x.range
-                                        })
-                                        //props.result(option[0])
-                                    }}
-                                > 
-                                    <div style={{float:"left",width:"20%"}} className="ellipsis-text">{x.name}</div>
-                                    <div style={{float:"left",width:"70%", height:"30px"}} className="">
-                                        <div style={{height:"25px",width:(x.y/(Math.max(...orderStatusData.map((hub:any) => Math.max(hub.y/1)))))*100+"%",backgroundColor:( x.range == "No Age" || x.range == "0 - 17" )?"#DC3545":"#aaa"}}></div>
-                                    </div>
-                                    <div style={{float:"left",width:"10%"}} className="ion-text-right ion-bold-text">({x.y})</div>
-                                </div>
-                            ))}
+                        <IonCol size="6" className="ion-padding" >
+                            <CustomSimpleBarChart
+                                data={orderStatusData}
+                                header="ORDERS BY STATUS"
+                                chart_column_1="ORDER METRIC"
+                                chart_column_2=""
+                                chart_column_3="COUNT"
+                                branch={hubKey}
+                                result={(e:any)=>{setHubKey(e.hub_key);}}
+                            />
                         </IonCol>
                     </IonRow>
                 </IonCol>
                 <IonCol>
-                    <DriverDeliveryStatusListFailed
-                        state={props.state}
-                        params={params}
-                        driver_key={(e:any)=>{setDriverKey(e)}}
-                        driver_name = {(e:any)=>{setDriverName(e)}}
-                        call_fact_deliveries_detail={(e:any)=>{/** */}}
-                    />
+                    <div className="ion-padding" style={{border:"0.5px solid #eee", borderRadius:"10px", height:"70vh",overflowY:"auto"}}>
+                        <DriverDeliveryStatusListFailed
+                            state={props.state}
+                            params={params}
+                            driver_key={(e:any)=>{setDriverKey(e)}}
+                            driver_name = {(e:any)=>{setDriverName(e)}}
+                            call_fact_deliveries_detail={(e:any)=>{/** */}}
+                        />
+                    </div>
                 </IonCol>
             </IonRow>
         </div>
